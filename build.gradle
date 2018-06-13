@@ -1,0 +1,385 @@
+import java.time.Year
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "Forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "Sonatype"
+            url = 'https://oss.sonatype.org/content/groups/public'
+        }
+    }
+    dependencies {
+        classpath 'com.matthewprenger:CurseGradle:1.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
+apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw'
+//Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
+
+def username = project.mod_id
+if (project.hasProperty('dev_mail')) {
+    username = findProperty('dev_mail')
+}
+else if (project.hasProperty('dev_username')) {
+    username = findProperty('dev_username')
+}
+
+def buildVersion = project.mod_version + ext.buildName
+version = "${project.mc_version}-" + buildVersion
+def change_log = ext.changeLog
+
+tasks.build.doLast {
+    println("Current version is ${modid}-${version}")
+    println("Changelog:")
+    println(change_log)
+}
+
+group = project.maven_group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = project.mod_id
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8 // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    maven {
+        //JEI files
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "http://modmaven.k-4u.nl"
+    }
+
+	//local maven, if present
+	mavenLocal()
+	
+    maven {
+        //fallback for almost everything, this is CurseForge :P
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+
+    maven {
+        //get dependencies from github
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
+}
+
+minecraft {
+    version = "${project.mc_version}-${project.forge_version}"
+    if (project.hasProperty('runDir')) {
+        runDir = findProperty('runDir')
+    }
+    else if (file('../run').exists()) {
+        runDir = "../run"
+    }
+    else {
+        runDir = "run"
+    }
+    println('run directory: ' + runDir.toString())
+
+    mappings = project.forge_mappings
+    makeObfSourceJar = true
+	
+    replace "@VERSION@", buildVersion
+    def fingerPrintKey = project.hasProperty('public_key') ? findProperty('public_key').replace(":", "").toLowerCase(Locale.ROOT) : "undefined"
+    replace "@FINGERPRINTKEY@", fingerPrintKey
+    replaceIn "${project.reference_class}".replace(".", "/")
+
+    if(project.hasProperty('dev_uuid')) {
+        clientRunArgs += "--uuid=${dev_uuid}"
+    }
+    else {
+        clientRunArgs += "--username=${username}"
+        if(project.hasProperty('dev_password')) clientRunArgs += "--password=${dev_password}"
+    }
+	
+	//coremod
+    clientJvmArgs += "-Dfml.coreMods.load=com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
+    serverJvmArgs += "-Dfml.coreMods.load=com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
+	if(project.hasProperty('loading_plugin_client')) {
+		clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
+    }
+	if(project.hasProperty('loading_plugin_server')) {
+		serverJvmArgs += "-Dfml.coreMods.load=${loading_plugin_server}"
+    }
+    
+    //skip the screen to confirm that you want to load a world with missing registry entries
+    serverJvmArgs += "-Dfml.doNotBackup=true"
+    clientJvmArgs += "-Dfml.doNotBackup=true"
+
+    // skip having to confirm on server
+    serverJvmArgs += "-Dfml.queryResult=confirm"
+
+    // disable server gui
+    serverRunArgs += "nogui"
+
+    //skip jansi warnings in the log
+    serverJvmArgs += '-Dlog4j.skipJansi=true'
+    clientJvmArgs += '-Dlog4j.skipJansi=true'
+}
+
+dependencies {
+
+    // at runtime, use the full JEI jar (no build dependency, this is for testing purposes ONLY!
+    runtime "mezz.jei:jei_${project.mc_version}:${project.jei_version}"
+
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+else {
+    throw new IllegalArgumentException("wrong java version")
+}
+
+// API jar
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+    include 'com/github/upcraftlp/craftdevcore/api/**'
+	from "LICENSE"
+    manifest.mainAttributes(
+            "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+            "Implementation-Title": project.name + '-api',
+            "Implementation-Version": project.version,
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:api",
+            "Built-On": "${mc_version}-${forge_version}"
+    )
+    classifier = 'api'
+}
+
+// Javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+	from "LICENSE"
+    manifest.mainAttributes(
+            "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+            "Implementation-Title": project.name + '-javadoc',
+            "Implementation-Version": project.version,
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
+            "Built-On": "${mc_version}-${forge_version}"
+    )
+    classifier = 'javadoc'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+	from "LICENSE"
+    manifest.mainAttributes(
+            "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+            "Implementation-Title": project.name + '-deobf',
+            "Implementation-Version": project.version,
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:deobf",
+            "Built-On": "${mc_version}-${forge_version}",
+            "FMLAT": "${project.mod_id}_at.cfg"
+    )
+    classifier = 'deobf'
+}
+
+task signApiJar(type: SignJar, dependsOn: apiJar) {
+    onlyIf {
+        project.hasProperty('sign_keyStore')
+    }
+    keyPass = findProperty('sign_keyPass')
+    keyStore = findProperty('sign_keyStore')
+    storePass = findProperty('sign_storePass')
+    alias = findProperty('sign_alias')
+
+    inputFile = deobfJar.archivePath
+    outputFile = deobfJar.archivePath
+}
+
+task signDeobfJar(type: SignJar, dependsOn: deobfJar) {
+    onlyIf {
+        project.hasProperty('sign_keyStore')
+    }
+    keyPass = findProperty('sign_keyPass')
+    keyStore = findProperty('sign_keyStore')
+    storePass = findProperty('sign_storePass')
+    alias = findProperty('sign_alias')
+
+    inputFile = deobfJar.archivePath
+    outputFile = deobfJar.archivePath
+}
+
+task signJavadocJar(type: SignJar, dependsOn: javadocJar) {
+    onlyIf {
+        project.hasProperty('sign_keyStore')
+    }
+    keyPass = findProperty('sign_keyPass')
+    keyStore = findProperty('sign_keyStore')
+    storePass = findProperty('sign_storePass')
+    alias = findProperty('sign_alias')
+
+    inputFile = deobfJar.archivePath
+    outputFile = deobfJar.archivePath
+}
+
+task coreJar(type: Jar) {
+    from(sourceSets.main.output) {
+        include 'com/github/upcraftlp/craftdevcore/asm/**'
+    }
+	from "LICENSE"
+    manifest.mainAttributes(
+            "Implementation-Title": project.name + "-corePlugin",
+            "Implementation-Version": "${project.mod_version}",
+            "Built-On": "${project.mc_version}-${project.forge_version}",
+            "FMLCorePlugin": "com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
+    )
+    classifier 'asm'
+    group = 'build'
+}
+
+reobf {
+    coreJar {
+        mappingType = 'SEARGE'
+    }
+}
+
+task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
+    onlyIf {
+        project.hasProperty('sign_keyStore')
+    }
+    keyPass = findProperty('sign_keyPass')
+    keyStore = findProperty('sign_keyStore')
+    storePass = findProperty('sign_storePass')
+    alias = findProperty('sign_alias')
+
+    inputFile = coreJar.archivePath
+    outputFile = coreJar.archivePath
+}
+
+jar {
+    dependsOn signCoreJar
+    exclude 'com/github/upcraftlp/craftdevcore/asm/**'
+    from(coreJar.archivePath.absolutePath) {
+        include '*'
+    }
+	from "LICENSE"
+
+    manifest.mainAttributes(
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${project.mod_version}",
+            "Built-On": "${project.mc_version}-${project.forge_version}",
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
+            "FMLAT": "${project.mod_id}_at.cfg",
+            "ContainedDeps": coreJar.archivePath.name
+            //"Main-Class": project.installer_main_class
+    )
+    classifier '' //this is the main jar!
+}
+
+//sign Jar
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    onlyIf {
+        project.hasProperty('sign_keyStore')
+    }
+    keyPass = findProperty('sign_keyPass')
+    keyStore = findProperty('sign_keyStore')
+    storePass = findProperty('sign_storePass')
+    alias = findProperty('sign_alias')
+
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+tasks.build.dependsOn signJar, signApiJar, signDeobfJar, signJavadocJar
+tasks.curseforge.dependsOn build
+
+artifacts {
+    archives apiJar
+    archives deobfJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact apiJar
+			artifact deobfJar
+            artifact javadocJar
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+def curseRelations = {
+    //optionalLibrary 'jei'
+    //optionalLibrary '' //add curseforge-slug here
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // add mod metadata to in mcmod.info
+        expand 'version':project.mod_version, 'mcversion':project.minecraft.version,
+                'mod_name':project.mod_name, 'mod_description':project.mod_description,
+                'url':project.url, 'update_url':project.update_json, 'year': Year.now().getValue()
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'		
+    }
+
+    //ATs
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+curseforge {
+    if (project.hasProperty('curse_key'))
+        apiKey = project.curse_key
+
+
+    if(project.hasProperty('curse_id')) {
+        project {
+            id = project.curse_id
+            changelogType = 'markdown'
+            changelog = change_log
+            releaseType = project.release_type
+
+            //relations curseRelations
+
+            addArtifact javadocJar
+            addArtifact sourceJar
+            addArtifact apiJar
+
+            //addGameVersion '1.12.2' //automatically determined by the CurseGradle plugin
+
+            mainArtifact(jar) {
+                displayName = "${project.mod_name} MC${mc_version} v${buildVersion}"
+            }
+        }
+    }
+}
