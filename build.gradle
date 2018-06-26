@@ -19,7 +19,7 @@ buildscript {
 }
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven-publish'
+//apply plugin: 'maven-publish'
 apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
@@ -49,9 +49,20 @@ compileJava {
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+sourceSets {
+    compat {
+        compileClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+
+    main {
+        runtimeClasspath += sourceSets.compat.runtimeClasspath
+    }
+}
+
 repositories {
     maven {
         //JEI files
+        name = "DVS1 Maven FS"
         url = "http://dvs1.progwml6.com/files/maven"
     }
     maven {
@@ -60,13 +71,54 @@ repositories {
         url = "http://modmaven.k-4u.nl"
     }
 
+    maven {
+        //hwyla
+        name = "TehNut"
+        url = "https://tehnut.info/maven"
+    }
+
+    maven {
+        name = "Thiakill"
+        url = "http://maven.thiakil.com"
+    }
+
+    maven {
+        name = "refinedstorage"
+        url = "https://repo.raoulvdberge.com"
+    }
+
+    maven {
+        name = "MMD"
+        url = "https://maven.mcmoddev.com"
+    }
+
+    maven {
+        name = "CoFH"
+        url = "http://maven.covers1624.net"
+    }
+
+    maven {
+        name = "tterag"
+        url = "https://maven.tterrag.com"
+    }
+
+    maven {
+        name = "chickenbones"
+        url = "http://chickenbones.net/maven"
+    }
+
+    maven {
+        name "jared maven"
+        url "http://blamejared.com/maven"
+    }
+
 	//local maven, if present
 	mavenLocal()
 	
     maven {
         //fallback for almost everything, this is CurseForge :P
         name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        url = "https://minecraft.curseforge.com/api/maven"
     }
 
     maven {
@@ -74,6 +126,12 @@ repositories {
         name = "JitPack"
         url = "https://jitpack.io"
     }
+
+    /*maven { //FIXME broken maven!
+        //headcrumbs
+        name = "theProgrammingTurkey"
+        url = "https://maven.theprogrammingturkey.com"
+    }*/
 }
 
 minecraft {
@@ -95,6 +153,7 @@ minecraft {
     replace "@VERSION@", buildVersion
     def fingerPrintKey = project.hasProperty('public_key') ? findProperty('public_key').replace(":", "").toLowerCase(Locale.ROOT) : "undefined"
     replace "@FINGERPRINTKEY@", fingerPrintKey
+    replace "@UPDATEJSON@", update_json
     replaceIn "${project.reference_class}".replace(".", "/")
 
     if(project.hasProperty('dev_uuid')) {
@@ -106,8 +165,6 @@ minecraft {
     }
 	
 	//coremod
-    clientJvmArgs += "-Dfml.coreMods.load=com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
-    serverJvmArgs += "-Dfml.coreMods.load=com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
 	if(project.hasProperty('loading_plugin_client')) {
 		clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
     }
@@ -132,9 +189,48 @@ minecraft {
 
 dependencies {
 
-    // at runtime, use the full JEI jar (no build dependency, this is for testing purposes ONLY!
-    runtime "mezz.jei:jei_${project.mc_version}:${project.jei_version}"
+    deobfCompile "com.github.azanor:Baubles:${baubles_version}"
 
+    compileOnly "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+
+    deobfProvided "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
+    /*
+    deobfCompile "slimeknights:TConstruct:${tcon_version}"
+    deobfCompile "slimeknights.mantle:Mantle:${mantle_version}" //dependency for TConstruct
+
+    deobfProvided "refinedstorage:refinedstorage:${rs_version}:api"
+    runtime "refinedstorage:refinedstorage:${rs_version}"
+
+    deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:api"
+    runtime "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
+
+    deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:api"
+    runtime "team.chisel:Chisel:MC${mc_version}-${chisel_version}"
+    runtime "team.chisel.ctm:CTM:MC${ctm_version}"
+
+    deobfCompile "MCMultiPart2:MCMultiPart:${mcmp_version}"
+
+    deobfCompile "info.tehnut.harvest:Harvest:${harvest_version}"
+
+    compile "codechicken:ForgeMultipart:${mc_version}-${fmp_version}:deobf"
+    runtime "codechicken:ChickenASM:1.12-${ccl_asm_version}"
+
+    deobfCompile "net.darkhax.gamestages:GameStages-1.12.2:${gamestages_version}"
+    runtime "net.darkhax.bookshelf:Bookshelf-1.12.2:${bookshelf_version}"
+    runtime "net.darkhax.caliper:Caliper-1.12.2:${caliper_version}"
+
+    deobfCompile("com.github.Team-Rapture:Aquatic:${aquatic_version}") {
+        exclude group: "mezz.jei"
+    }
+
+    deobfCompile "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
+
+    compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
+    */
+    //FIXME temporarily disabled until maven is fixed
+    //deobfCompile "ganymedes01.headcrumbs:HeadCrumbs:${mc_version}-${headcrumbs_version}"
 }
 
 compileJava {
@@ -154,9 +250,11 @@ else {
 
 // API jar
 task apiJar(type: Jar) {
-    from sourceSets.main.output
-    from sourceSets.main.allJava
-    include 'com/github/upcraftlp/craftdevcore/api/**'
+    onlyIf{
+        project.hasProperty("api_package")
+    }
+    from sourceSets.api.allJava
+    include new String(findProperty("api_package") + "/**").replace(".", "/")
 	from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
@@ -205,8 +303,8 @@ task signApiJar(type: SignJar, dependsOn: apiJar) {
     storePass = findProperty('sign_storePass')
     alias = findProperty('sign_alias')
 
-    inputFile = deobfJar.archivePath
-    outputFile = deobfJar.archivePath
+    inputFile = apiJar.archivePath
+    outputFile = apiJar.archivePath
 }
 
 task signDeobfJar(type: SignJar, dependsOn: deobfJar) {
@@ -231,13 +329,13 @@ task signJavadocJar(type: SignJar, dependsOn: javadocJar) {
     storePass = findProperty('sign_storePass')
     alias = findProperty('sign_alias')
 
-    inputFile = deobfJar.archivePath
-    outputFile = deobfJar.archivePath
+    inputFile = javadocJar.archivePath
+    outputFile = javadocJar.archivePath
 }
 
 task coreJar(type: Jar) {
     from(sourceSets.main.output) {
-        include 'com/github/upcraftlp/craftdevcore/asm/**'
+        include 'com/github/upcraftlp/glasspane/asm/**'
     }
 	from "LICENSE"
     manifest.mainAttributes(
@@ -271,7 +369,7 @@ task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
 
 jar {
     dependsOn signCoreJar
-    exclude 'com/github/upcraftlp/craftdevcore/asm/**'
+    exclude 'com/github/upcraftlp/glasspane/asm/**'
     from(coreJar.archivePath.absolutePath) {
         include '*'
     }
@@ -312,7 +410,7 @@ artifacts {
     archives javadocJar
 }
 
-publishing {
+/*publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
@@ -325,7 +423,7 @@ publishing {
     repositories {
         mavenLocal()
     }
-}
+}*/
 
 def curseRelations = {
     //optionalLibrary 'jei'
