@@ -1,0 +1,9 @@
+#PARSE_ESCAPES
+
+#Gui
+tooltip.glasspane.generic.advancedKeyInfo=Press %s for more info!
+key.categories.glasspane=GlassPane
+
+#Key Bindings
+key.glasspane.categories.general=GlassPane | General
+key.glasspane.category.general.tooltip=Show Advanced Tooltip
