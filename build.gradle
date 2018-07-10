@@ -112,6 +112,11 @@ repositories {
         url "http://blamejared.com/maven"
     }
 
+    maven {
+        name = "chaosfield" //fallback for ellpeck's mods
+        url = "https://maven.chaosfield.at"
+    }
+
 	//local maven, if present
 	mavenLocal()
 	
@@ -196,6 +201,13 @@ dependencies {
 
     deobfProvided "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
     runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
+
+    runtime "de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}"
+
+    deobfCompile "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
+
+    compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
+
     /*
     deobfCompile "slimeknights:TConstruct:${tcon_version}"
     deobfCompile "slimeknights.mantle:Mantle:${mantle_version}" //dependency for TConstruct
@@ -225,9 +237,6 @@ dependencies {
         exclude group: "mezz.jei"
     }
 
-    deobfCompile "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
-
-    compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
     */
     //FIXME temporarily disabled until maven is fixed
     //deobfCompile "ganymedes01.headcrumbs:HeadCrumbs:${mc_version}-${headcrumbs_version}"
