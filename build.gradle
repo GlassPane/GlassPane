@@ -20,7 +20,7 @@ buildscript {
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'net.minecraftforge.gradle.forge'
 //apply plugin: 'maven-publish'
-apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw'
+apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw/mod_script.gradle'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 def username = project.mod_id
@@ -153,6 +153,9 @@ minecraft {
     println('run directory: ' + runDir.toString())
 
     mappings = project.forge_mappings
+    if("${mappings}" != "${project.ext.mappings}") {
+        println(String.format("You are on old mappings, latest mappings are %s (you are on %s)", project.ext.mappings, mappings))
+    }
     makeObfSourceJar = true
 	
     replace "@VERSION@", buildVersion
