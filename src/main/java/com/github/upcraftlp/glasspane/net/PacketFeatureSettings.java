@@ -1,6 +1,5 @@
 package com.github.upcraftlp.glasspane.net;
 
-import com.github.upcraftlp.glasspane.api.net.MessageBase;
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagList;
@@ -9,11 +8,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketFeatureSettings extends MessageBase implements IMessageHandler<PacketFeatureSettings, IMessage> {
+public class PacketFeatureSettings implements IMessageHandler<PacketFeatureSettings, IMessage>, IMessage {
 
     private NBTTagList featureList;
 
+    public PacketFeatureSettings() {
+        //NO-OP
+    }
+
     public PacketFeatureSettings(NBTTagList featureList) {
+        this();
         this.featureList = featureList;
     }
 

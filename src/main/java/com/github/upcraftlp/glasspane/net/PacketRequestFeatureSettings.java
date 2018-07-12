@@ -1,10 +1,10 @@
 package com.github.upcraftlp.glasspane.net;
 
-import com.github.upcraftlp.glasspane.api.net.MessageBase;
 import com.github.upcraftlp.glasspane.vanity.VanityPlayerInfo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,11 +13,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Arrays;
 import java.util.List;
 
-public class PacketRequestFeatureSettings extends MessageBase {
+public class PacketRequestFeatureSettings implements IMessage {
 
     private ResourceLocation[] INFOS;
 
+    public PacketRequestFeatureSettings() {
+        //NO-OP
+    }
+
     public PacketRequestFeatureSettings(VanityPlayerInfo playerInfo) {
+        this();
         List<ResourceLocation> keys = playerInfo.getFeatures();
         INFOS = keys.toArray(new ResourceLocation[keys.size()]);
     }
