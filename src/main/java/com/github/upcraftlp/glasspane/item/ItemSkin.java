@@ -32,7 +32,7 @@ public class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
     }
 
     @Override
-    public int getSkin(ItemStack stack, @Nullable World world, @Nullable Entity entity) {
+    public float getSkin(ItemStack stack, @Nullable World world, @Nullable Entity entity) {
         return NBTUtil.getDefaultTagCompound(stack).getInteger(CUSTOM_SKIN.getResourcePath());
     }
 }

@@ -9,5 +9,5 @@ public interface IHasSkin<T> {
 
     void setSkin(T t, int skin);
 
-    int getSkin(T t, @Nullable World world, @Nullable Entity entity);
+    float getSkin(T t, @Nullable World world, @Nullable Entity entity);
 }
