@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 @Config.LangKey("config.glasspane.general.title")
-@Config(modid = GlassPane.MODID, name = "GlassPane")
+@Config(modid = GlassPane.MODID, name = "glasspanemods/GlassPane") //--> /config/glasspanemods/GlassPane.cfg
 public class Lens {
 
     public static final Client client = new Client();
