@@ -4,7 +4,9 @@ import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.net.PacketFeatureSettings;
+import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
+import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -49,15 +51,18 @@ public class GlassPane {
             SERVER_PROXY = "com.github.upcraftlp.glasspane.proxy.ServerProxy";
 
     private static final Logger log = LogManager.getLogger(MODID, new PrefixMessageFactory(MODNAME));
+    private static final Logger debugLogger = LogManager.getLogger(MODID, new PrefixMessageFactory(MODNAME + " DEBUG"));
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
     public static IProxy proxy;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        GlassPaneAutomatedRegistry.gatherAnnotatedClasses(event);
         GlassPaneAutomatedRegistry.registerDefaultPostProcessors();
+        GlassPaneAutomatedRegistry.gatherAnnotatedClasses(event);
+        GlassPaneGuideRegistry.initGuideBooks(event);
         NetworkHandler.INSTANCE.registerMessage(PacketFeatureSettings.class, PacketFeatureSettings.class, NetworkHandler.getNextPacketID(), Side.SERVER);
+        NetworkHandler.INSTANCE.registerMessage(PacketOpenGuide.class, PacketOpenGuide.class, NetworkHandler.getNextPacketID(), Side.CLIENT);
         proxy.preInit(event);
         log.debug("Pre-Initialization complete!", new Object[0]);
     }
@@ -113,6 +118,10 @@ public class GlassPane {
 
     public static Logger getLogger() {
         return log;
+    }
+
+    public static Logger getDebugLogger() {
+        return debugLogger;
     }
 
 }

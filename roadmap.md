@@ -48,11 +48,10 @@
 - [ ] block
 - [ ] silverfish block //TODO make silverfishes hide in there --> forge issue?
 - [ ] tileentity
-- [ ] network packets
 - [ ] Creative Tab
     - [ ] random icon from tab items
     - [ ] random icon from predefined list
-- [ ] Update-Checker //TODO fix beta version announcements
+- [ ] Update-Checker
 - [ ] World Generation
     - [ ] basic ore generation (single block type per vein)
     - [ ] custom generation

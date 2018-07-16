@@ -49,7 +49,7 @@ public class PacketRequestFeatureSettings implements IMessage {
             //TODO set settings!
 
 
-            return new PacketFeatureSettings();
+            return null;// new PacketFeatureSettings();
         }
     }
 }
