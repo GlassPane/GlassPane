@@ -3,25 +3,21 @@ package com.github.upcraftlp.glasspane.registry;
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.guide.Guide;
 import com.github.upcraftlp.glasspane.api.guide.GuideBook;
-import com.github.upcraftlp.glasspane.api.guide.GuidePage;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -80,16 +76,4 @@ public class GlassPaneGuideRegistry {
         if(!GUIDES.containsKey(guideName)) GUIDES.put(guideName, new GuideBook(guideName));
         return GUIDES.get(guideName);
     }
-
-    public static GuidePage readPage(GuideBook book, ResourceLocation page) {
-        String path = "/assets/" + book.getGuideName().getResourceDomain() + "/guides/" + book.getGuideName().getResourcePath() + "/" + Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase(Locale.ROOT) + "/" + page.getResourceDomain() + "/" + page.getResourcePath() + ".md";
-        try(InputStream inputStream = GlassPaneGuideRegistry.class.getResourceAsStream(path)) {
-
-        }
-        catch (Exception e) {
-            GlassPane.getLogger().error("unable to read guide page " + page + "@" + book.getGuideName(), e);
-            return new GuidePage();
-        }
-    }
-
 }

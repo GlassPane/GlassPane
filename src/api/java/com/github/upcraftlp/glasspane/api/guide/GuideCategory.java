@@ -4,6 +4,9 @@ import com.github.upcraftlp.glasspane.api.util.NameUtils;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class GuideCategory {
 
@@ -16,8 +19,8 @@ public class GuideCategory {
         return icon;
     }
 
-    public GuidePage[] getPages() {
-        return pages;
+    public List<GuidePage> getPages() {
+        return Collections.unmodifiableList(Arrays.asList(pages));
     }
 
     private ResourceLocation id = NameUtils.MISSING;
@@ -25,5 +28,8 @@ public class GuideCategory {
     @Nullable
     private ResourceLocation icon;
 
-    private GuidePage[] pages = new GuidePage[0];
+    /**
+     * package-private because it's accessed in {@link GuideBook#jsonPostProcess()}
+     */
+    GuidePage[] pages = new GuidePage[0];
 }
