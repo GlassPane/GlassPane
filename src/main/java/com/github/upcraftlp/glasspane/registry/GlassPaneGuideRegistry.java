@@ -1,8 +1,9 @@
 package com.github.upcraftlp.glasspane.registry;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.guide.Guide;
-import com.github.upcraftlp.glasspane.api.guide.GuideBook;
+import com.github.upcraftlp.glasspane.api.guide.GuideInject;
+import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
+import com.github.upcraftlp.glasspane.guide.GuideBookImpl;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
@@ -23,11 +24,11 @@ import java.util.Set;
 
 public class GlassPaneGuideRegistry {
 
-    private static final Map<ResourceLocation, GuideBook> GUIDES = new HashMap<>();
+    private static final Map<ResourceLocation, IGuideBook> GUIDES = new HashMap<>();
 
     public static void initGuideBooks(FMLPreInitializationEvent event) {
         final ModContainer modContainer = ForgeUtils.getCurrentModContainer();
-        Set<ASMDataTable.ASMData> asmData = event.getAsmData().getAll(Guide.class.getCanonicalName());
+        Set<ASMDataTable.ASMData> asmData = event.getAsmData().getAll(GuideInject.class.getCanonicalName());
         for(ASMDataTable.ASMData entry : asmData) {
             try {
                 String modid = (String) entry.getAnnotationInfo().getOrDefault("modid", "minecraft");
@@ -37,8 +38,8 @@ public class GlassPaneGuideRegistry {
                 String targetClass = entry.getClassName();
                 String targetField = entry.getObjectName();
                 Field f = Class.forName(targetClass).getDeclaredField(targetField);
-                if(f.getType() != GuideBook.class) {
-                    GlassPane.getLogger().error("unable to inject guide {} into {}.{}: wrong type ({}), annotated field MUST be of type {}!", guideName, targetClass, targetField, f.getType().getCanonicalName(), GuideBook.class.getCanonicalName());
+                if(f.getType() != IGuideBook.class) {
+                    GlassPane.getLogger().error("unable to inject guide {} into {}.{}: wrong type ({}), annotated field MUST be of type {}!", guideName, targetClass, targetField, f.getType().getCanonicalName(), IGuideBook.class.getCanonicalName());
                     continue;
                 }
                 if((f.getModifiers() & Modifier.STATIC) != Modifier.STATIC) {
@@ -59,8 +60,7 @@ public class GlassPaneGuideRegistry {
         String path = "/assets/" + guideName.getResourceDomain() + "/guides/" + guideName.getResourcePath() + "/index.json";
         try(InputStream stream = GlassPaneGuideRegistry.class.getResourceAsStream(path)) {
             if(stream != null) {
-                GuideBook guide = JsonUtil.GSON.fromJson(new InputStreamReader(stream), GuideBook.class);
-                guide.setGuideName(guideName);
+                IGuideBook guide = JsonUtil.GSON.fromJson(new InputStreamReader(stream), GuideBookImpl.class);
                 GUIDES.put(guideName, guide);
             }
             else throw new FileNotFoundException("guide index file not found: " + path);
@@ -72,8 +72,8 @@ public class GlassPaneGuideRegistry {
         }
     }
 
-    public static GuideBook getGuide(ResourceLocation guideName) {
-        if(!GUIDES.containsKey(guideName)) GUIDES.put(guideName, new GuideBook(guideName));
+    public static IGuideBook getGuide(ResourceLocation guideName) {
+        if(!GUIDES.containsKey(guideName)) GUIDES.put(guideName, new GuideBookImpl(guideName));
         return GUIDES.get(guideName);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.item;
 
-import com.github.upcraftlp.glasspane.client.guide.GuideHandler;
+import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

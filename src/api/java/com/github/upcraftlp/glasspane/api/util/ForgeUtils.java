@@ -1,5 +1,6 @@
 package com.github.upcraftlp.glasspane.api.util;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -7,6 +8,8 @@ import net.minecraftforge.fml.common.ModContainer;
 import javax.annotation.Nullable;
 
 public class ForgeUtils {
+
+    public static final ResourceLocation MISSING = new ResourceLocation("minecraft", "missingno");
 
     @Nullable
     public static ModContainer getModContainer(String modid) {

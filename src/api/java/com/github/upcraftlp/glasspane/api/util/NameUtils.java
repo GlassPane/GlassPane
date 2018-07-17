@@ -2,7 +2,6 @@ package com.github.upcraftlp.glasspane.api.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -25,5 +24,4 @@ public class NameUtils {
         return block;
     }
 
-    public static final ResourceLocation MISSING = new ResourceLocation("minecraft", "missingno");
 }

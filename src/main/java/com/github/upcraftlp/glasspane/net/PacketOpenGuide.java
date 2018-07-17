@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.net;
 
-import com.github.upcraftlp.glasspane.client.guide.GuideHandler;
+import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;

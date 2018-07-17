@@ -2,7 +2,7 @@ package com.github.upcraftlp.glasspane.client.gui;
 
 import com.github.upcraftlp.glasspane.api.gui.EnumGuiBackgroundType;
 import com.github.upcraftlp.glasspane.api.gui.IGuiCustomizableBackground;
-import com.github.upcraftlp.glasspane.api.guide.GuideBook;
+import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -16,10 +16,10 @@ import java.util.Objects;
 
 public class GuiScreenGuide extends GuiScreen implements IGuiCustomizableBackground {
 
-    private final GuideBook book;
+    private final IGuideBook book;
     private final ResourceLocation selectedPage;
 
-    public GuiScreenGuide(GuideBook book, @Nullable ResourceLocation selectedPage) {
+    public GuiScreenGuide(IGuideBook book, @Nullable ResourceLocation selectedPage) {
         this.book = book;
         this.selectedPage = selectedPage;
     }
@@ -30,8 +30,8 @@ public class GuiScreenGuide extends GuiScreen implements IGuiCustomizableBackgro
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         //TODO debug!
-        drawCenteredString(fontRenderer, this.book.getGuideName().toString(), width / 2, 14, this.getBackgroundType().accentColor);
-        drawCenteredString(fontRenderer, Objects.toString(this.selectedPage), width / 2, 14 + fontRenderer.FONT_HEIGHT + 2, this.getBackgroundType().textColor);
+        drawCenteredString(fontRenderer, this.book.getGuideName().toString(), width / 2, 14, this.getBackgroundType().colors.getAccentColor());
+        drawCenteredString(fontRenderer, Objects.toString(this.selectedPage), width / 2, 14 + fontRenderer.FONT_HEIGHT + 2, this.getBackgroundType().colors.getTextColor());
     }
 
     public EnumGuiBackgroundType getBackgroundType() {
@@ -45,8 +45,8 @@ public class GuiScreenGuide extends GuiScreen implements IGuiCustomizableBackgro
             this.drawGradientRect(0, 0, this.width, this.height, background.worldBackgroundColorStart, background.worldBackgroundColorEnd);
         }
         else this.drawBackground(tint);
-        drawRect(10, 10, width - 10, height - 10, background.borderColor);
-        drawRect(12, 12, width - 12, height - 12, background.fillColor);
+        drawRect(10, 10, width - 10, height - 10, background.colors.getBorderColor());
+        drawRect(12, 12, width - 12, height - 12, background.colors.getFillColor());
         //TODO draw custom texture!
     }
 

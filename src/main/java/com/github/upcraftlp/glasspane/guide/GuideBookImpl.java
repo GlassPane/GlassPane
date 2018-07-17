@@ -1,7 +1,11 @@
-package com.github.upcraftlp.glasspane.api.guide;
+package com.github.upcraftlp.glasspane.guide;
 
 import com.github.upcraftlp.glasspane.GlassPane;
+import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
+import com.github.upcraftlp.glasspane.api.guide.IGuideCategory;
+import com.github.upcraftlp.glasspane.api.guide.IGuidePage;
 import com.github.upcraftlp.glasspane.api.util.serialization.JsonPostProcessable;
+import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -12,42 +16,41 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class GuideBook implements JsonPostProcessable {
+public class GuideBookImpl implements IGuideBook, JsonPostProcessable {
 
-    private transient ResourceLocation id;
+    private ResourceLocation id;
 
-    public GuideBook(ResourceLocation guideName) {
+    public GuideBookImpl(ResourceLocation guideName) {
         this.id = guideName;
     }
 
+    @Override
     public ResourceLocation getGuideName() {
         return id;
     }
 
-    private GuideCategory[] categories = new GuideCategory[0];
+    private GuideCategoryImpl[] categories = new GuideCategoryImpl[0];
 
-    public List<GuideCategory> getCategories() {
+    @Override
+    public List<IGuideCategory> getCategories() {
         return Collections.unmodifiableList(Arrays.asList(categories));
-    }
-
-    public void setGuideName(ResourceLocation guideName) {
-        this.id = guideName;
     }
 
     @Override
     public void jsonPostProcess() {
         Arrays.stream(this.categories).forEach(category -> {
+            if(Lens.debugMode) GlassPane.getDebugLogger().info("parsing category: {}, pages: {}", category.getId(), category.pages.length);
             for(int i = 0; i < category.pages.length; i++) {
-                GuidePage page = category.pages[i];
+                IGuidePage page = category.pages[i];
                 //TODO parse page!
                 ResourceLocation pageID = page.getId();
                 String path = "/assets/" + this.id.getResourceDomain() + "/guides/" + this.id.getResourcePath() + "/" + Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase(Locale.ROOT) + "/" + pageID.getResourceDomain() + "/" + pageID.getResourcePath() + ".md";
                 try(InputStream inputStream = GlassPaneGuideRegistry.class.getResourceAsStream(path)) {
-                    page.read(inputStream);
+                    page.readPage(inputStream);
                 }
                 catch(Exception e) {
                     GlassPane.getLogger().error("unable to parse page " + pageID + "@" + this.id + ", substituting empty page!", e);
-                    category.pages[i] = new GuidePage();
+                    category.pages[i] = new GuidePageImpl();
                 }
             }
         });

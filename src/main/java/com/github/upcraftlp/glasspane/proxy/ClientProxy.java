@@ -2,7 +2,7 @@ package com.github.upcraftlp.glasspane.proxy;
 
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
-import com.github.upcraftlp.glasspane.client.guide.GuideHandler;
+import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import com.github.upcraftlp.glasspane.net.PacketRequestFeatureSettings;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;

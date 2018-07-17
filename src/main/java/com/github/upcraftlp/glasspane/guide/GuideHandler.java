@@ -1,7 +1,7 @@
-package com.github.upcraftlp.glasspane.client.guide;
+package com.github.upcraftlp.glasspane.guide;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.guide.GuideBook;
+import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.client.gui.GuiScreenGuide;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +36,7 @@ public class GuideHandler {
     private static Map<ResourceLocation, ResourceLocation> PERSISTENT_PAGES = new HashMap<>();
     private static File SAVE_FILE;
 
-    public static void openPage(GuideBook guide, @Nullable ResourceLocation guidePage) {
+    public static void openPage(IGuideBook guide, @Nullable ResourceLocation guidePage) {
         //if(mc.currentScreen instanceof GuiScreenGuide) {
         //    GuiScreenGuide guideScreen = (GuiScreenGuide) mc.currentScreen;
         //    LAST_PAGES.put(guideScreen.getBook().getGuideName(), guideScreen.getSelectedPage());
@@ -39,7 +46,7 @@ public class GuideHandler {
         else PERSISTENT_PAGES.remove(guide.getGuideName());
     }
 
-    public static void openLastPage(GuideBook guide) {
+    public static void openLastPage(IGuideBook guide) {
         openPage(guide, PERSISTENT_PAGES.get(guide.getGuideName()));
     }
 
