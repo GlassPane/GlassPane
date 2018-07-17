@@ -8,7 +8,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class PostProcessorItem extends RegistryPostProcessor<Item> {
+public class PostProcessorItemModels extends RegistryPostProcessor<Item> {
 
     @Override
     public Class<Item> getType() {

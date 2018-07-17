@@ -11,13 +11,20 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 public abstract class RegistryPostProcessor<T extends IForgeRegistryEntry<T>> {
 
-    private static final List<RegistryPostProcessor> REGISTERED_PARSERS = new ArrayList<>();
+    private static List<RegistryPostProcessor> REGISTERED_PARSERS = new ArrayList<>();
 
     /**
      * @return whether or not to process entries of the specified type
      */
     public <V extends IForgeRegistryEntry<V>> boolean shouldProcess(Class<V> type) {
-        return type == this.getType();
+        return this.getType().isAssignableFrom(type);
+    }
+
+    /**
+     * internal use ONLY
+     */
+    public static void completeInitialization() {
+        REGISTERED_PARSERS = null; //let the GC free up some memory
     }
 
     /**

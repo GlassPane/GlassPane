@@ -4,9 +4,12 @@ import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.registry.AutoRegistry;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
-import com.github.upcraftlp.glasspane.registry.processor.PostProcessorBlock;
-import com.github.upcraftlp.glasspane.registry.processor.PostProcessorItem;
+import com.github.upcraftlp.glasspane.registry.processor.PostProcessorBlockItems;
+import com.github.upcraftlp.glasspane.registry.processor.PostProcessorBlockModels;
+import com.github.upcraftlp.glasspane.registry.processor.PostProcessorColorables;
+import com.github.upcraftlp.glasspane.registry.processor.PostProcessorItemModels;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -15,6 +18,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
@@ -68,9 +72,15 @@ public class GlassPaneAutomatedRegistry {
         }
     }
 
-    public static void registerDefaultPostProcessors() {
-        RegistryPostProcessor.registerPostProcessor(new PostProcessorBlock());
-        RegistryPostProcessor.registerPostProcessor(new PostProcessorItem());
+    public static void registerDefaultPostProcessors(Side side) {
+        RegistryPostProcessor.registerPostProcessor(new PostProcessorBlockItems());
+        RegistryPostProcessor.registerPostProcessor(new PostProcessorBlockModels());
+        RegistryPostProcessor.registerPostProcessor(new PostProcessorItemModels());
+        if(side.isClient()) {
+            PostProcessorColorables colorHandler = new PostProcessorColorables();
+            RegistryPostProcessor.registerPostProcessor(colorHandler);
+            MinecraftForge.EVENT_BUS.register(colorHandler);
+        }
     }
 
     public static void gatherAnnotatedClasses(FMLPreInitializationEvent event) {
@@ -85,8 +95,6 @@ public class GlassPaneAutomatedRegistry {
             } catch(Exception e) {
                 GlassPane.getLogger().error("error while preparing class for automatic registration", e);
             }
-
-
         });
         ForgeUtils.setCurrentModContainer(modContainer);
     }
