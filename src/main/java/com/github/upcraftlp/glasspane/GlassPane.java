@@ -1,13 +1,12 @@
 package com.github.upcraftlp.glasspane;
 
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
-import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
+import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
 import com.github.upcraftlp.glasspane.net.PacketFeatureSettings;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -77,7 +76,7 @@ public class GlassPane {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
-        MinecraftForge.EVENT_BUS.unregister(GlassPaneAutomatedRegistry.class);
+        GlassPaneAutomatedRegistry.cleanup();
         log.debug("Post-Initialization complete!", new Object[0]);
     }
 

@@ -40,7 +40,7 @@ public class GlassPaneAutomatedRegistry {
     public static <T extends IForgeRegistryEntry<T>> void onRegister(RegistryEvent.Register event) {
         ModContainer currentModContainer = Loader.instance().activeModContainer();
         IForgeRegistry<T> registry = event.getRegistry();
-        GlassPane.getLogger().debug("beginning registry of type {}...", registry.getRegistrySuperType().getSimpleName());
+        GlassPane.getLogger().debug("Beginning registry of type {}...", registry.getRegistrySuperType().getSimpleName());
         for(Class clazz : REGISTRY_CLASSES) {
             AutoRegistry annotation = AutoRegistry.class.cast(clazz.getAnnotation(AutoRegistry.class));
             String modid = annotation.value();
@@ -93,9 +93,14 @@ public class GlassPaneAutomatedRegistry {
                 Class clazz = Class.forName(data.getClassName());
                 REGISTRY_CLASSES.add(clazz);
             } catch(Exception e) {
-                GlassPane.getLogger().error("error while preparing class for automatic registration", e);
+                GlassPane.getLogger().error("Error while preparing class for automatic registration", e);
             }
         });
         ForgeUtils.setCurrentModContainer(modContainer);
+    }
+
+    public static void cleanup() {
+        MinecraftForge.EVENT_BUS.unregister(GlassPaneAutomatedRegistry.class);
+        REGISTRY_CLASSES = null;
     }
 }
