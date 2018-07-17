@@ -117,9 +117,9 @@ repositories {
         url = "https://maven.chaosfield.at"
     }
 
-	//local maven, if present
-	mavenLocal()
-	
+    //local maven, if present
+    mavenLocal()
+
     maven {
         //fallback for almost everything, this is CurseForge :P
         name = "CurseForge"
@@ -157,7 +157,7 @@ minecraft {
         println(String.format("You are on old mappings, latest mappings are %s (you are on %s)", project.ext.mappings, mappings))
     }
     makeObfSourceJar = true
-	
+
     replace "@VERSION@", buildVersion
     def fingerPrintKey = project.hasProperty('public_key') ? findProperty('public_key').replace(":", "").toLowerCase(Locale.ROOT) : "undefined"
     replace "@FINGERPRINTKEY@", fingerPrintKey
@@ -171,14 +171,10 @@ minecraft {
         clientRunArgs += "--username=${username}"
         if(project.hasProperty('dev_password')) clientRunArgs += "--password=${dev_password}"
     }
-	
-	//coremod
-	if(project.hasProperty('loading_plugin_client')) {
-		clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
-    }
-	if(project.hasProperty('loading_plugin_server')) {
-		serverJvmArgs += "-Dfml.coreMods.load=${loading_plugin_server}"
-    }
+
+    //coremod
+    if(project.hasProperty('loading_plugin_client')) clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
+    if(project.hasProperty('loading_plugin_server')) serverJvmArgs += "-Dfml.coreMods.load=${loading_plugin_server}"
     
     //skip the screen to confirm that you want to load a world with missing registry entries
     serverJvmArgs += "-Dfml.doNotBackup=true"
@@ -267,7 +263,7 @@ task apiJar(type: Jar) {
     }
     from sourceSets.api.allJava
     include new String(findProperty("api_package") + "/**").replace(".", "/")
-	from "LICENSE"
+    from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
             "Implementation-Title": project.name + '-api',
@@ -281,7 +277,7 @@ task apiJar(type: Jar) {
 // Javadoc jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
-	from "LICENSE"
+    from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
             "Implementation-Title": project.name + '-javadoc',
@@ -294,7 +290,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-	from "LICENSE"
+    from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
             "Implementation-Title": project.name + '-deobf',
@@ -349,7 +345,7 @@ task coreJar(type: Jar) {
     from(sourceSets.main.output) {
         include 'com/github/upcraftlp/glasspane/asm/**'
     }
-	from "LICENSE"
+    from "LICENSE"
     manifest.mainAttributes(
             "Implementation-Title": project.name + "-corePlugin",
             "Implementation-Version": "${project.mod_version}",
@@ -385,7 +381,7 @@ jar {
     from(coreJar.archivePath.absolutePath) {
         include '*'
     }
-	from "LICENSE"
+    from "LICENSE"
 
     manifest.mainAttributes(
             "Implementation-Title": project.name,
@@ -427,7 +423,7 @@ artifacts {
         mavenJava(MavenPublication) {
             artifact jar
             artifact apiJar
-			artifact deobfJar
+            artifact deobfJar
             artifact javadocJar
         }
     }
@@ -460,7 +456,7 @@ processResources
         
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'		
+        exclude 'mcmod.info'
     }
 
     //ATs

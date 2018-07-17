@@ -3,6 +3,7 @@ package com.github.upcraftlp.glasspane;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
+import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketFeatureSettings;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
@@ -64,57 +65,57 @@ public class GlassPane {
         NetworkHandler.INSTANCE.registerMessage(PacketFeatureSettings.class, PacketFeatureSettings.class, NetworkHandler.getNextPacketID(), Side.SERVER);
         NetworkHandler.INSTANCE.registerMessage(PacketOpenGuide.class, PacketOpenGuide.class, NetworkHandler.getNextPacketID(), Side.CLIENT);
         proxy.preInit(event);
-        log.debug("Pre-Initialization complete!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Pre-Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
-        log.debug("Initialization complete!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
         GlassPaneAutomatedRegistry.cleanup();
-        log.debug("Post-Initialization complete!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Post-Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverAboutToStarting(FMLServerAboutToStartEvent event) {
         proxy.serverAboutToStart(event);
-        log.debug("Server is going to start!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Server is going to start!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         proxy.serverStarting(event);
-        log.debug("Starting up the server!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Starting up the server!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
         proxy.serverStarted(event);
-        log.debug("Server has started!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Server has started!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
         proxy.serverStopping(event);
-        log.debug("Server is going to stop!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Server is going to stop!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         proxy.serverStopped(event);
-        log.debug("Server has stopped!", new Object[0]);
+        if(Lens.debugMode) debugLogger.info("Server has stopped!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void handleModMessages(FMLInterModComms.IMCEvent event) {
         List<FMLInterModComms.IMCMessage> messages = event.getMessages();
         proxy.handleInterModMessages(messages);
-        log.info("Received {} IMC messages!", messages.size());
+        if(Lens.debugMode) debugLogger.info("Received {} IMC messages!", messages.size());
     }
 
     public static Logger getLogger() {
