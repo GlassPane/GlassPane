@@ -10,12 +10,15 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+@SideOnly(Side.CLIENT)
 public class GuiColorPicker extends Gui implements IGuiElement {
 
     private static final int BORDER_SIZE = 1;
