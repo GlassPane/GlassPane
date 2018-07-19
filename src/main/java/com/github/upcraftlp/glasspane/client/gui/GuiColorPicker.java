@@ -76,11 +76,11 @@ public class GuiColorPicker extends Gui implements IGuiElement {
     }
 
     private void trackMouseColor(int mouseX, int mouseY) {
-        double relX = this.centerX - mouseX + this.x;
+        double relX = mouseX - this.centerX + this.x;
         double relY = this.centerY - mouseY + this.y;
         double distance = Math.hypot(relX, relY);
         if(distance <= this.radius) {
-            double angleRad = (Math.atan2(relX, relY) + Math.PI - Math.PI / 3) % MathUtils.TAU;
+            double angleRad = (Math.atan2(relY, relX) + Math.PI) % MathUtils.TAU;
             this.setSelectedColor(1.0D - angleRad / MathUtils.TAU, distance / radius, this.brightness);
         }
     }
@@ -112,11 +112,12 @@ public class GuiColorPicker extends Gui implements IGuiElement {
                 vertexBuffer.pos(this.centerX, this.centerY, 0).color(centerColorRGB.getRed(), centerColorRGB.getGreen(), centerColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
                 double triangleSize = MathUtils.TAU / EDGES;
                 for(int i = 0; i < EDGES + 1; i++) {
-                    double angleRad = MathUtils.TAU - i * triangleSize;
+                    double angleRad = i * triangleSize;
                     Color pixelColorRGB = new Color(Color.HSBtoRGB((float) (angleRad / MathUtils.TAU), 1.0F, this.brightness));
-                    vertexBuffer.pos(this.centerX + Math.cos(angleRad) * radius, this.centerY + Math.sin(angleRad) * radius, 0).color(pixelColorRGB.getRed(), pixelColorRGB.getGreen(), pixelColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
+                    vertexBuffer.pos(this.centerX + Math.cos(angleRad) * radius, this.centerY - Math.sin(angleRad) * radius, 0).color(pixelColorRGB.getRed(), pixelColorRGB.getGreen(), pixelColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
                 }
             }
+            vertexBuffer.setTranslation(0, 0, 0);
             tessellator.draw();
         }
         GlStateManager.enableTexture2D();
