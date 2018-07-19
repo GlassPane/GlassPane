@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.config;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.gui.EnumGuiBackgroundType;
+import com.github.upcraftlp.glasspane.api.client.gui.EnumGuiBackgroundType;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Config;

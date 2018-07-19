@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.client.gui;
 
-import com.github.upcraftlp.glasspane.api.gui.EnumGuiBackgroundType;
-import com.github.upcraftlp.glasspane.api.gui.IGuiCustomizableBackground;
+import com.github.upcraftlp.glasspane.api.client.gui.EnumGuiBackgroundType;
+import com.github.upcraftlp.glasspane.api.client.gui.IGuiCustomizableBackground;
 import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.GuiScreen;

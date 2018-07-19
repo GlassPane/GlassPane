@@ -1,21 +1,39 @@
 package com.github.upcraftlp.glasspane.client.gui;
 
-import com.github.upcraftlp.glasspane.api.gui.IColorPalette;
+import com.github.upcraftlp.glasspane.GlassPane;
+import com.github.upcraftlp.glasspane.api.client.gui.IGuiElement;
+import com.github.upcraftlp.glasspane.api.color.IColorPalette;
+import com.github.upcraftlp.glasspane.api.util.MathUtils;
+import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.lwjgl.opengl.GL11;
 
-public class GuiColorPicker extends Gui {
+import java.awt.*;
+import java.util.Locale;
+import java.util.function.Consumer;
+
+public class GuiColorPicker extends Gui implements IGuiElement {
 
     private static final int BORDER_SIZE = 1;
+    private static final int COLOR_PICKER_ALPHA = 255;
+    private static final int RENDER_Z_LEVEL = 100;
 
-    private final int componentId;
-    private final IGuiColorPickerCallback callback;
-    private final int x;
-    private final int y;
-    private final int width;
-    private final int height;
+    private final  Consumer<Color> callback;
+    private final int x, y, width, height, componentId;
     private final IColorPalette colors;
 
-    public GuiColorPicker(int componentId, IGuiColorPickerCallback callback, int x, int y, int width, int height, IColorPalette colorPalette) {
+    private float hue = 0.0F;
+    private float saturation = 0.0F;
+    private float brightness = 1.0F; //TODO slider
+
+    private double centerX, centerY, radius;
+    private Color color;
+
+    public GuiColorPicker(int componentId, Consumer<Color> callback, int x, int y, int width, int height, IColorPalette colorPalette) {
         this.componentId = componentId;
         this.callback = callback;
         this.x = x;
@@ -23,16 +41,97 @@ public class GuiColorPicker extends Gui {
         this.width = width;
         this.height = height;
         colors = colorPalette;
+        this.centerX = this.width / 2.0D;  // 1/2
+        this.centerY = this.height * 0.4D; // 2/5
+        this.radius = Math.min((this.width) / 2.0D, (this.height) / 3.0D) * 0.8D;
     }
 
+    public void setSelectedColor(Color color) {
+        float[] values = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        this.hue = values[0];
+        this.saturation = values[1];
+        this.brightness = values[2];
+        this.color = color;
+        this.callback.accept(color);
+    }
+
+    public void setSelectedColor(double hue, double saturation, double brightness) {
+        this.hue = (float) hue;
+        this.saturation = (float) saturation;
+        this.brightness = (float) brightness;
+        this.color = Color.getHSBColor(this.hue, this.saturation, this.brightness);
+        if(Lens.debugMode) GlassPane.getDebugLogger().info("Color-Wheel: H: {}, S: {}, B: {}, RGB: #{}", this.hue, this.saturation, this.brightness, Integer.toHexString(this.color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
+        this.callback.accept(this.color);
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        this.trackMouseColor(mouseX, mouseY);
+    }
+
+    @Override
+    public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        this.trackMouseColor(mouseX, mouseY);
+    }
+
+    private void trackMouseColor(int mouseX, int mouseY) {
+        double relX = this.centerX - mouseX;
+        double relY = this.centerY - mouseY;
+        double distance = Math.hypot(relX, relY);
+        if(distance <= this.radius) {
+            double angleRad = MathUtils.TWO_PI - Math.acos(relX / this.radius);
+            if(Math.asin(relY / this.radius) < 0) angleRad += Math.PI;
+            else angleRad = Math.PI - angleRad;
+            this.setSelectedColor(angleRad / MathUtils.TWO_PI, distance / radius, this.brightness);
+        }
+    }
+
+    @Override
     public void drawElement() {
-        drawRect(this.x, this.y, this.x + this.width, this.y + this.height, this.colors.getBorderColor());
-        drawRect(this.x + BORDER_SIZE, this.y + BORDER_SIZE, this.x + this.width - BORDER_SIZE * 2, this.y + this.height - BORDER_SIZE * 2, this.colors.getFillColor());
-        //TODO actual color picker texture (generate one or use premade texture?)
+        Rectangle dimension = this.getSize();
+        drawRect((int) dimension.getMinX(), (int) dimension.getMinY(), (int) dimension.getMaxX(), (int) dimension.getMaxY(), this.colors.getBorderColor());
+        drawRect((int) dimension.getMinX() + BORDER_SIZE, (int) dimension.getMinY() + BORDER_SIZE, (int) dimension.getMaxX() - BORDER_SIZE * 2, (int) dimension.getMaxY() - BORDER_SIZE * 2, this.colors.getFillColor());
+
+        //drawRect(this.buttonX, this.buttonY, this.buttonX + this.buttonWidth, this.buttonY + this.buttonHeight, this.rgbColor);
+
+        //TODO config setting?
+        //may only be an even divisor of 360 or the circle will look like a rainbow pac-man
+        //more than 120 really doesn't make sense at all and just wastes CPU and GPU power.
+        int POINT_COUNT = 12;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        {
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder vertexBuffer = tessellator.getBuffer();
+
+            vertexBuffer.setTranslation(this.x, this.y, RENDER_Z_LEVEL);
+            vertexBuffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+            {
+                Color centerColorRGB = new Color(Color.HSBtoRGB(0.0F, 0.0F, this.brightness)); //cannot just use white here because brightness might be different -> gray / black
+                vertexBuffer.pos(this.centerX, this.centerY, 0).color(centerColorRGB.getRed(), centerColorRGB.getGreen(), centerColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
+                double triangleSize = MathUtils.TWO_PI / POINT_COUNT;
+                for(int i = 0; i <= POINT_COUNT; i++) {
+                    double angleRad = MathUtils.TWO_PI - (i * triangleSize);
+                    Color pixelColorRGB = new Color(Color.HSBtoRGB((float) (angleRad / MathUtils.TWO_PI), 1.0F, this.brightness));
+                    vertexBuffer.pos(this.centerX + Math.cos(angleRad) * radius, this.centerY + Math.sin(angleRad) * radius, 0).color(pixelColorRGB.getRed(), pixelColorRGB.getGreen(), pixelColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
+                }
+            }
+            tessellator.draw();
+        }
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
     }
 
-    public interface IGuiColorPickerCallback {
-
-        void selectColor(int color);
+    @Override
+    public Rectangle getSize() {
+        return new Rectangle(this.x, this.y, this.width, this.height);
     }
+
+    public Rectangle getCircleSize() {
+        int ceilRadius = (int) Math.ceil(this.radius * 2.0D);
+        return new Rectangle((int) (this.centerX - this.radius), (int) (this.centerY - this.radius), ceilRadius, ceilRadius);
+    }
+
 }

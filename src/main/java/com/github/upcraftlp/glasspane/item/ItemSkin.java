@@ -3,11 +3,14 @@ package com.github.upcraftlp.glasspane.item;
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.skin.IHasSkin;
 import com.github.upcraftlp.glasspane.api.util.NBTUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -24,6 +27,14 @@ public class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
         super.onCreated(stack, worldIn, playerIn);
         this.setSkin(stack, GlassPane.proxy.getSelectedItemSkin(stack, playerIn));
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ItemStack getDefaultInstance() {
+        ItemStack ret = super.getDefaultInstance();
+        this.setSkin(ret, GlassPane.proxy.getSelectedItemSkin(ret, Minecraft.getMinecraft().player));
+        return ret;
     }
 
     @Override

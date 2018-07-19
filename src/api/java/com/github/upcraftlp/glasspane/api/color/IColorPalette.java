@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.gui;
+package com.github.upcraftlp.glasspane.api.color;
 
 public interface IColorPalette {
     int getBorderColor();

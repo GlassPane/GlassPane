@@ -1,5 +1,7 @@
-package com.github.upcraftlp.glasspane.api.gui;
+package com.github.upcraftlp.glasspane.api.client.gui;
 
+import com.github.upcraftlp.glasspane.api.color.ColorPalette;
+import com.github.upcraftlp.glasspane.api.color.IColorPalette;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import net.minecraft.util.ResourceLocation;
 

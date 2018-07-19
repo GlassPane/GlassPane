@@ -15,6 +15,7 @@ public class MathUtils {
     public static final long TRILLION   =  1000000000000L;
 
     public static final double SQRT_2 = Math.sqrt(2.0D);
+    public static final double TWO_PI = Math.PI * 2.0D;
 
     private static final TreeMap<Integer, String> ROMAN_NUMERALS = new TreeMap<>();
     static {
