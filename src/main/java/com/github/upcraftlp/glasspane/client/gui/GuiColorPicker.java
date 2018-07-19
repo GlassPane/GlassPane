@@ -23,7 +23,8 @@ public class GuiColorPicker extends Gui implements IGuiElement {
     private static final int RENDER_Z_LEVEL = 100;
 
     private final  Consumer<Color> callback;
-    private final int x, y, width, height, componentId;
+    private final int x, y, width, height;
+    public final int componentId;
     private final IColorPalette colors;
 
     private float hue = 0.0F;
@@ -75,9 +76,9 @@ public class GuiColorPicker extends Gui implements IGuiElement {
     }
 
     private void trackMouseColor(int mouseX, int mouseY) {
-        double relX = this.centerX - mouseX;
-        double relY = this.centerY - mouseY;
-        double distance = MathUtils.TAU - Math.hypot(relX, relY);
+        double relX = this.centerX - mouseX + this.x;
+        double relY = this.centerY - mouseY + this.y;
+        double distance = Math.hypot(relX, relY);
         if(distance <= this.radius) {
             double angleRad = Math.atan2(relX, relY);
             this.setSelectedColor(angleRad / MathUtils.TAU, distance / radius, this.brightness);
@@ -95,7 +96,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         //TODO config setting?
         //may only be an even divisor of 360 or the circle will look like a rainbow pac-man
         //more than 120 really doesn't make sense at all and just wastes CPU and GPU power.
-        int EDGES = 6;
+        int EDGES = 120;
 
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
