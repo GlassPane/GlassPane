@@ -77,11 +77,9 @@ public class GuiColorPicker extends Gui implements IGuiElement {
     private void trackMouseColor(int mouseX, int mouseY) {
         double relX = this.centerX - mouseX;
         double relY = this.centerY - mouseY;
-        double distance = Math.hypot(relX, relY);
+        double distance = MathUtils.TAU - Math.hypot(relX, relY);
         if(distance <= this.radius) {
-            double angleRad = MathUtils.TAU - Math.acos(relX / this.radius);
-            if(Math.asin(relY / this.radius) < 0) angleRad += Math.PI;
-            else angleRad = Math.PI - angleRad;
+            double angleRad = Math.atan2(relX, relY);
             this.setSelectedColor(angleRad / MathUtils.TAU, distance / radius, this.brightness);
         }
     }
@@ -97,7 +95,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         //TODO config setting?
         //may only be an even divisor of 360 or the circle will look like a rainbow pac-man
         //more than 120 really doesn't make sense at all and just wastes CPU and GPU power.
-        int POINT_COUNT = 12;
+        int EDGES = 6;
 
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
@@ -111,9 +109,9 @@ public class GuiColorPicker extends Gui implements IGuiElement {
             {
                 Color centerColorRGB = new Color(Color.HSBtoRGB(0.0F, 0.0F, this.brightness)); //cannot just use white here because brightness might be different -> gray / black
                 vertexBuffer.pos(this.centerX, this.centerY, 0).color(centerColorRGB.getRed(), centerColorRGB.getGreen(), centerColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
-                double triangleSize = MathUtils.TAU / POINT_COUNT;
-                for(int i = 0; i <= POINT_COUNT; i++) {
-                    double angleRad = MathUtils.TAU - (i * triangleSize);
+                double triangleSize = MathUtils.TAU / EDGES;
+                for(int i = 0; i < EDGES + 1; i++) {
+                    double angleRad = MathUtils.TAU - i * triangleSize;
                     Color pixelColorRGB = new Color(Color.HSBtoRGB((float) (angleRad / MathUtils.TAU), 1.0F, this.brightness));
                     vertexBuffer.pos(this.centerX + Math.cos(angleRad) * radius, this.centerY + Math.sin(angleRad) * radius, 0).color(pixelColorRGB.getRed(), pixelColorRGB.getGreen(), pixelColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
                 }
