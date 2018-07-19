@@ -79,10 +79,10 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         double relY = this.centerY - mouseY;
         double distance = Math.hypot(relX, relY);
         if(distance <= this.radius) {
-            double angleRad = MathUtils.TWO_PI - Math.acos(relX / this.radius);
+            double angleRad = MathUtils.TAU - Math.acos(relX / this.radius);
             if(Math.asin(relY / this.radius) < 0) angleRad += Math.PI;
             else angleRad = Math.PI - angleRad;
-            this.setSelectedColor(angleRad / MathUtils.TWO_PI, distance / radius, this.brightness);
+            this.setSelectedColor(angleRad / MathUtils.TAU, distance / radius, this.brightness);
         }
     }
 
@@ -111,10 +111,10 @@ public class GuiColorPicker extends Gui implements IGuiElement {
             {
                 Color centerColorRGB = new Color(Color.HSBtoRGB(0.0F, 0.0F, this.brightness)); //cannot just use white here because brightness might be different -> gray / black
                 vertexBuffer.pos(this.centerX, this.centerY, 0).color(centerColorRGB.getRed(), centerColorRGB.getGreen(), centerColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
-                double triangleSize = MathUtils.TWO_PI / POINT_COUNT;
+                double triangleSize = MathUtils.TAU / POINT_COUNT;
                 for(int i = 0; i <= POINT_COUNT; i++) {
-                    double angleRad = MathUtils.TWO_PI - (i * triangleSize);
-                    Color pixelColorRGB = new Color(Color.HSBtoRGB((float) (angleRad / MathUtils.TWO_PI), 1.0F, this.brightness));
+                    double angleRad = MathUtils.TAU - (i * triangleSize);
+                    Color pixelColorRGB = new Color(Color.HSBtoRGB((float) (angleRad / MathUtils.TAU), 1.0F, this.brightness));
                     vertexBuffer.pos(this.centerX + Math.cos(angleRad) * radius, this.centerY + Math.sin(angleRad) * radius, 0).color(pixelColorRGB.getRed(), pixelColorRGB.getGreen(), pixelColorRGB.getBlue(), COLOR_PICKER_ALPHA).endVertex();
                 }
             }
