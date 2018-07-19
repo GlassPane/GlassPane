@@ -76,12 +76,12 @@ public class GuiColorPicker extends Gui implements IGuiElement {
     }
 
     private void trackMouseColor(int mouseX, int mouseY) {
-        double relX = mouseX - this.centerX + this.x;
+        double relX = mouseX - this.centerX - this.x;
         double relY = this.centerY - mouseY + this.y;
         double distance = Math.hypot(relX, relY);
         if(distance <= this.radius) {
-            double angleRad = (Math.atan2(relY, relX) + Math.PI) % MathUtils.TAU;
-            this.setSelectedColor(1.0D - angleRad / MathUtils.TAU, distance / radius, this.brightness);
+            double angleRad = (MathUtils.TAU + Math.atan2(relY, relX)) % MathUtils.TAU;
+            this.setSelectedColor(angleRad / MathUtils.TAU, distance / radius, this.brightness);
         }
     }
 
@@ -131,7 +131,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
 
     public Rectangle getCircleSize() {
         int ceilRadius = (int) Math.ceil(this.radius * 2.0D);
-        return new Rectangle((int) (this.centerX - this.radius), (int) (this.centerY - this.radius), ceilRadius, ceilRadius);
+        return new Rectangle(this.x + (int) (this.centerX - this.radius), this.y + (int) (this.centerY - this.radius), ceilRadius, ceilRadius);
     }
 
 }
