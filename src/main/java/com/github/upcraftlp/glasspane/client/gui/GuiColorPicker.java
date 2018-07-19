@@ -80,7 +80,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         double relY = this.centerY - mouseY + this.y;
         double distance = Math.hypot(relX, relY);
         if(distance <= this.radius) {
-            double angleRad = Math.atan2(relX, relY);
+            double angleRad = Math.atan2(relX, relY) + Math.PI;
             this.setSelectedColor(angleRad / MathUtils.TAU, distance / radius, this.brightness);
         }
     }
