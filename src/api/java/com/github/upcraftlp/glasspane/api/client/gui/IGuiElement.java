@@ -1,5 +1,6 @@
 package com.github.upcraftlp.glasspane.api.client.gui;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.IOException;
 
@@ -7,6 +8,12 @@ public interface IGuiElement {
 
     void drawElement();
     Rectangle getSize();
+    default void updateScreen() {}
+
+    @Nullable
+    default Object getChildComponentByID(int id) {
+        return null;
+    }
 
     //keyboard
     default void handleKeyboardInput() throws IOException {}

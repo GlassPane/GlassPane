@@ -5,7 +5,10 @@ import com.github.upcraftlp.glasspane.api.client.gui.IGuiElement;
 import com.github.upcraftlp.glasspane.api.color.IColorPalette;
 import com.github.upcraftlp.glasspane.api.util.MathUtils;
 import com.github.upcraftlp.glasspane.config.Lens;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiPageButtonList;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,12 +17,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Locale;
 import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
-public class GuiColorPicker extends Gui implements IGuiElement {
+public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonList.GuiResponder {
+
+    //TODO add GUI slider element as brightness slider
+    //TODO render marker for selected color on screen
 
     private static final int BORDER_SIZE = 1;
     private static final int COLOR_PICKER_ALPHA = 255;
@@ -32,12 +39,13 @@ public class GuiColorPicker extends Gui implements IGuiElement {
 
     private float hue = 0.0F;
     private float saturation = 0.0F;
-    private float brightness = 1.0F; //TODO slider
+    private float brightness = 1.0F;
 
     private double centerX, centerY, radius;
     private Color color;
+    private GuiTextField textField;
 
-    public GuiColorPicker(int componentId, Consumer<Color> callback, int x, int y, int width, int height, IColorPalette colorPalette) {
+    public GuiColorPicker(int componentId, FontRenderer fontRenderer, Consumer<Color> callback, int x, int y, int width, int height, IColorPalette colorPalette) {
         this.componentId = componentId;
         this.callback = callback;
         this.x = x;
@@ -48,6 +56,24 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         this.centerX = this.width / 2.0D;  // 1/2
         this.centerY = this.height * 0.4D; // 2/5
         this.radius = Math.min((this.width) / 2.0D, (this.height) / 3.0D) * 0.8D;
+        Rectangle circle = this.getCircleSize();
+        this.textField = new GuiTextField(0, fontRenderer, circle.x + 1, circle.y + circle.height + 4, circle.width - 2, 20);
+        this.textField.setGuiResponder(this);
+        this.textField.setValidator(this::apply);
+        this.textField.setMaxStringLength(7);
+    }
+
+    @Nullable
+    @Override
+    public Object getChildComponentByID(int id) {
+        if(id == this.textField.getId()) return this.textField;
+        //TODO uncomment when adding GUI slider!
+        //if(id == this.slider.getComponentID()) return this.slider;
+        return null;
+    }
+
+    private boolean apply(String s) {
+        return s.matches("^[0-9a-fA-F]{0,6}?$");
     }
 
     public void setSelectedColor(Color color) {
@@ -57,6 +83,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         this.brightness = values[2];
         this.color = color;
         this.callback.accept(color);
+        this.textField.setText(Integer.toHexString(color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
     }
 
     public void setSelectedColor(double hue, double saturation, double brightness) {
@@ -66,16 +93,28 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         this.color = Color.getHSBColor(this.hue, this.saturation, this.brightness);
         if(Lens.debugMode) GlassPane.getDebugLogger().info("Color-Wheel: H: {}, S: {}, B: {}, RGB: #{}", this.hue, this.saturation, this.brightness, Integer.toHexString(this.color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
         this.callback.accept(this.color);
+        this.textField.setText(Integer.toHexString(this.color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
+    }
+
+    @Override
+    public void updateScreen() {
+        this.textField.updateCursorCounter();
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        this.textField.mouseClicked(mouseX, mouseY, mouseButton);
         this.trackMouseColor(mouseX, mouseY);
     }
 
     @Override
     public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         this.trackMouseColor(mouseX, mouseY);
+    }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) {
+        if(this.textField.textboxKeyTyped(typedChar, keyCode)) this.updateColorFromTextBox(this.textField.getText());
     }
 
     private void trackMouseColor(int mouseX, int mouseY) {
@@ -125,6 +164,7 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         }
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
+        this.textField.drawTextBox();
     }
 
     @Override
@@ -137,4 +177,32 @@ public class GuiColorPicker extends Gui implements IGuiElement {
         return new Rectangle(this.x + (int) (this.centerX - this.radius), this.y + (int) (this.centerY - this.radius), ceilRadius, ceilRadius);
     }
 
+    private void updateColorFromTextBox(String text) {
+        if(text.matches("^[0-9a-fA-F]{6}$")) {
+            Color result = null;
+            try {
+                result = Color.decode("#" + text.toUpperCase(Locale.ROOT));
+            }
+            catch(Exception e) {
+                //should never happen
+                e.printStackTrace();
+            }
+            if(result != null) this.setSelectedColor(result);
+        }
+    }
+
+    @Override
+    public void setEntryValue(int id, boolean value) {
+        //NO-OP
+    }
+
+    @Override
+    public void setEntryValue(int id, float value) {
+        //NO-OP
+    }
+
+    @Override
+    public void setEntryValue(int id, String value) {
+        this.updateColorFromTextBox(value);
+    }
 }
