@@ -10,7 +10,7 @@
 - [ ] easy lists
 - [ ] warning for mismatching fingerprints "Continue loading at your own risk" or "Shutdown MC instance"
 - [ ] easy text list
-- [ ] color picker utility
+- [x] color picker utility
 
 ---
 ## basic tools, weapons, other items:

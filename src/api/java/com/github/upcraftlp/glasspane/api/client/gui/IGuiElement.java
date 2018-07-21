@@ -2,7 +2,6 @@ package com.github.upcraftlp.glasspane.api.client.gui;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.IOException;
 
 public interface IGuiElement {
 
@@ -16,12 +15,12 @@ public interface IGuiElement {
     }
 
     //keyboard
-    default void handleKeyboardInput() throws IOException {}
-    default void keyTyped(char typedChar, int keyCode) throws IOException {}
+    default void handleKeyboardInput() {}
+    default void keyTyped(char typedChar, int keyCode) {}
 
     //mouse
-    default void handleMouseInput() throws IOException {}
-    default void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {}
+    default void handleMouseInput() {}
+    default void mouseClicked(int mouseX, int mouseY, int mouseButton) {}
     default void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {}
     default void mouseReleased(int mouseX, int mouseY, int state) {}
 }

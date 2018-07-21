@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.client.gui;
+package com.github.upcraftlp.glasspane.client.gui.element;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;

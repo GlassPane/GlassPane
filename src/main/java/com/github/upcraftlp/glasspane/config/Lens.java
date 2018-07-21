@@ -25,7 +25,8 @@ public class Lens {
         @Config.Comment("The background that should be used for GUIs that support dynamic backgrounds")
         public EnumGuiBackgroundType guiBackgroundType = EnumGuiBackgroundType.VANILLA;
 
-        @Config.Name("Show advanced tooltip information?")
+        @Config.Name("Advanced Tooltips")
+        @Config.Comment("Show advanced tooltip information?")
         public boolean showAdvancedTooltipInfo = true;
 
         @Config.Ignore
