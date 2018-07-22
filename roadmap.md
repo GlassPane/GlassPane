@@ -3,7 +3,7 @@
 ---
 ## GUIs:
 - [ ] pre-built styles
-    - [ ] vanilla
+    - [ ] Vanilla
     - [ ] Thermal Mods
     - [ ] Futuristic
 - [ ] pre-built accept/cancel, yes/no
@@ -11,6 +11,7 @@
 - [ ] warning for mismatching fingerprints "Continue loading at your own risk" or "Shutdown MC instance"
 - [ ] easy text list
 - [x] color picker utility
+- [x] sliders
 
 ---
 ## basic tools, weapons, other items:

@@ -1,6 +1,7 @@
 package com.github.upcraftlp.glasspane.client.gui.element;
 
 import com.github.upcraftlp.glasspane.GlassPane;
+import com.github.upcraftlp.glasspane.api.client.gui.GuiConstants;
 import com.github.upcraftlp.glasspane.api.client.gui.IGuiElement;
 import com.github.upcraftlp.glasspane.api.color.DefaultColors;
 import com.github.upcraftlp.glasspane.api.color.IColorPalette;
@@ -14,8 +15,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -29,7 +32,6 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
     //TODO get rid of recursive update color calls!
     private static final int BORDER_SIZE = 1;
     private static final int COLOR_PICKER_ALPHA = 255;
-    private static final int RENDER_Z_LEVEL = 100;
 
     /**
      * may only be an even divisor of 360 or the circle will look like a rainbow pac-man
@@ -115,13 +117,13 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         this.textField.mouseClicked(mouseX, mouseY, mouseButton);
         this.sliderBrightness.mouseClicked(mouseX, mouseY, mouseButton);
-        this.trackMouseColor(mouseX, mouseY);
+        if(mouseButton == GuiConstants.LEFT_MOUSE_BUTTON) this.trackMouseColor(mouseX, mouseY);
     }
 
     @Override
     public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         this.sliderBrightness.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        this.trackMouseColor(mouseX, mouseY);
+        if(clickedMouseButton == GuiConstants.LEFT_MOUSE_BUTTON) this.trackMouseColor(mouseX, mouseY);
     }
 
     @Override
@@ -136,8 +138,28 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
 
     @Override
     public void keyTyped(char typedChar, int keyCode) {
-        this.sliderBrightness.keyTyped(typedChar, keyCode);
         if(this.textField.textboxKeyTyped(typedChar, keyCode)) this.updateColorFromTextBox(this.textField.getText());
+        else {
+            if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) this.sliderBrightness.keyTyped(typedChar, keyCode);
+            else switch(keyCode) {
+                case Keyboard.KEY_UP:
+                case Keyboard.KEY_W:
+                    this.setSelectedColor(this.hue, MathHelper.clamp(this.saturation + 0.05F, 0.0F, 1.0F), this.sliderBrightness.getValue());
+                    break;
+                case Keyboard.KEY_DOWN:
+                case Keyboard.KEY_S:
+                    this.setSelectedColor(this.hue, MathHelper.clamp(this.saturation - 0.05F, 0.0F, 1.0F), this.sliderBrightness.getValue());
+                    break;
+                case Keyboard.KEY_RIGHT:
+                case Keyboard.KEY_D:
+                    this.setSelectedColor((this.hue - 0.05F + 1.0F) % 1.0F, this.saturation, this.sliderBrightness.getValue());
+                    break;
+                case Keyboard.KEY_LEFT:
+                case Keyboard.KEY_A:
+                    this.setSelectedColor((this.hue + 0.05F) % 1.0F, this.saturation, this.sliderBrightness.getValue());
+                    break;
+            }
+        }
     }
 
     private void trackMouseColor(int mouseX, int mouseY) {
@@ -163,7 +185,7 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder vertexBuffer = tessellator.getBuffer();
 
-            vertexBuffer.setTranslation(this.x, this.y, RENDER_Z_LEVEL);
+            vertexBuffer.setTranslation(this.x, this.y, 0);
             vertexBuffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
             {
                 Color centerColorRGB = new Color(Color.HSBtoRGB(0.0F, 0.0F, this.sliderBrightness.getValue())); //cannot just use white here because brightness might be different -> gray / black
@@ -180,6 +202,14 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
         }
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
+        double angle = MathUtils.TAU - this.hue * MathUtils.TAU;
+
+        int x = (int) (this.centerX + this.x + Math.cos(angle) * this.saturation * this.radius);
+        int y = (int) (this.centerY + this.y + Math.sin(angle) * this.saturation * this.radius);
+
+        drawRect(x - 1, y, x + 2, y + 1, this.colors.getAccentColor());
+        drawRect(x, y - 1, x + 1, y + 2, this.colors.getAccentColor());
+
         this.textField.drawTextBox();
         this.sliderBrightness.drawElement();
     }
