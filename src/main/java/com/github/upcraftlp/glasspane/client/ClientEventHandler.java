@@ -1,9 +1,9 @@
 package com.github.upcraftlp.glasspane.client;
 
 import com.github.upcraftlp.glasspane.GlassPane;
+import com.github.upcraftlp.glasspane.api.client.IItemTooltipProvider;
 import com.github.upcraftlp.glasspane.api.color.DefaultColors;
 import com.github.upcraftlp.glasspane.config.Lens;
-import com.github.upcraftlp.glasspane.item.ItemBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -20,7 +20,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void preRenderTooltip(RenderTooltipEvent.Pre event) {
         Item item = event.getStack().getItem();
-        shouldRenderBackgroundColor = item instanceof ItemBase && ((ItemBase) item).hasAdvancedTooltip(event.getStack()) && Lens.client.showAdvancedTooltipInfo && (Minecraft.getMinecraft().gameSettings.advancedItemTooltips || Keyboard.isKeyDown(Lens.client.keyAdvandedTooltip.getKeyCode()));
+        shouldRenderBackgroundColor = item instanceof IItemTooltipProvider && ((IItemTooltipProvider) item).hasAdvancedTooltip(event.getStack()) && Lens.client.showAdvancedTooltipInfo && (Minecraft.getMinecraft().gameSettings.advancedItemTooltips || Keyboard.isKeyDown(Lens.client.keyAdvandedTooltip.getKeyCode()));
     }
 
     @SubscribeEvent

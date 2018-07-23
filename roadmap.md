@@ -16,12 +16,11 @@
 ---
 ## basic tools, weapons, other items:
 - [x] base item
-- [ ] food
+- [x] food
 - [ ] shield
-- [ ] sword
-- [ ] tools
-- [ ] multi tool
-- [ ] hoe (enchantable!)
+- [x] sword
+- [x] tools
+- [x] hoe
 - [ ] shears
 - [x] armor
 - [ ] Bow
@@ -30,7 +29,8 @@
     - [ ] JSON-based
     - [ ] Markdown-based
     - [ ] HTML-based
-- [x] skinnable items
+    - [x] guide item
+- [x] base skinnable item
 -----
 ##Structures:
 - [ ] nbt

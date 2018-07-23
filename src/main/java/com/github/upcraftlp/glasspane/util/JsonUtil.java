@@ -14,6 +14,8 @@ public class JsonUtil {
     static {
         GsonBuilder builder = new GsonBuilder();
         if(Lens.debugMode) builder.setPrettyPrinting();
+        builder.disableHtmlEscaping();
+        builder.serializeNulls();
         builder.registerTypeAdapter(ResourceLocation.class, new JsonSerializerResourceLocation());
         builder.registerTypeAdapterFactory(new JsonPostProcessor());
         //TODO register more type adapters!
