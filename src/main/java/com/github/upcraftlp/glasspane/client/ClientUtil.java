@@ -13,12 +13,18 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+
 @SideOnly(Side.CLIENT)
 public class ClientUtil {
+
+    public static final File RESOURCES_DIR = new File((File) ReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "minecraftDir"), "resources");
 
     public static ITextComponent getKeyInfo(TextFormatting textColor, TextFormatting keyColor) {
         ITextComponent keyInfo = new TextComponentString(Lens.client.keyAdvandedTooltip.getDisplayName()).setStyle(new Style().setColor(keyColor));
