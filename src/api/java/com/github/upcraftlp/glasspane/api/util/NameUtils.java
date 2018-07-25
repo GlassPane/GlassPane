@@ -18,14 +18,14 @@ public class NameUtils {
     public static Item name(Item item, String name) {
         Validate.isTrue(!StringUtil.isNullOrEmpty(name), "null or empty registry name!");
         item.setRegistryName(name);
-        item.setTranslationKey(item.getRegistryName().getNamespace() + "." + name);
+        item.setTranslationKey(item.getRegistryName().getNamespace() + "." + item.getRegistryName().getPath());
         return item;
     }
 
     public static Block name(Block block, String name) {
         Validate.isTrue(!StringUtil.isNullOrEmpty(name), "null or empty registry name!");
         block.setRegistryName(name);
-        block.setTranslationKey(block.getRegistryName().getNamespace() + "." + name);
+        block.setTranslationKey(block.getRegistryName().getNamespace() + "." + block.getRegistryName().getPath());
         return block;
     }
 
