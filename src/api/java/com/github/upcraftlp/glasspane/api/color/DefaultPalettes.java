@@ -6,7 +6,7 @@ package com.github.upcraftlp.glasspane.api.color;
 public class DefaultPalettes {
 
     //TODO brown-ish and green colors from vanilla mc
-    //public static final IColorPalette VANILLA = new ColorPalette(null, null, DefaultColors.FOREGROUND.WHITE, null);
+    public static final IColorPalette VANILLA = new ColorPalette(DefaultColors.BACKGROUND.WHITE, DefaultColors.BACKGROUND.BLACK, DefaultColors.FOREGROUND.WHITE, DefaultColors.FOREGROUND.WHITE);
 
     /**
      * see "http://www.color-hex.com/color-palette/25362"

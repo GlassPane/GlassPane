@@ -57,7 +57,7 @@ public class GlassPaneGuideRegistry {
     }
 
     public static void readGuideFromJson(ResourceLocation guideName) {
-        String path = "/assets/" + guideName.getResourceDomain() + "/guides/" + guideName.getResourcePath() + "/index.json";
+        String path = "/assets/" + guideName.getNamespace() + "/guides/" + guideName.getPath() + "/index.json";
         try(InputStream stream = GlassPaneGuideRegistry.class.getResourceAsStream(path)) {
             if(stream != null) {
                 IGuideBook guide = JsonUtil.GSON.fromJson(new InputStreamReader(stream), GuideBookImpl.class);
