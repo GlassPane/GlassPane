@@ -44,7 +44,7 @@ public class GuideBookImpl implements IGuideBook, JsonPostProcessable {
                 IGuidePage page = category.pages[i];
                 //TODO parse page!
                 ResourceLocation pageID = page.getId();
-                String path = "/assets/" + this.id.getResourceDomain() + "/guides/" + this.id.getResourcePath() + "/" + Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase(Locale.ROOT) + "/" + pageID.getResourceDomain() + "/" + pageID.getResourcePath() + ".md";
+                String path = "/assets/" + this.id.getNamespace() + "/guides/" + this.id.getPath() + "/" + Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase(Locale.ROOT) + "/" + pageID.getNamespace() + "/" + pageID.getPath() + ".md";
                 try(InputStream inputStream = GlassPaneGuideRegistry.class.getResourceAsStream(path)) {
                     page.readPage(inputStream);
                 }

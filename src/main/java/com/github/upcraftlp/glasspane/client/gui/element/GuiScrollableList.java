@@ -1,15 +1,21 @@
 package com.github.upcraftlp.glasspane.client.gui.element;
 
+import com.github.upcraftlp.glasspane.api.client.gui.GuiConstants;
+import com.github.upcraftlp.glasspane.api.client.gui.IGuiElement;
+import com.github.upcraftlp.glasspane.api.color.IColorPalette;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
-public class GuiScrollableList {
+public class GuiScrollableList extends Gui implements IGuiElement {
 
     //TODO make editable
     //TODO scroll indicator (also for dragging with the mouse)
@@ -20,24 +26,23 @@ public class GuiScrollableList {
     protected int x, y, width, height, currentIndex, maxIndex, maxLinesOnScreen;
     protected final List<String> textLines = Lists.newArrayList();
     protected static final Minecraft mc = Minecraft.getMinecraft();
-    protected FontRenderer fontRenderer = mc.fontRenderer;
-    protected static final int WHITE = 0xFFFFFFFF;
+    protected FontRenderer fontRenderer;
     protected int scrollFactor = 2;
-    private int timePressed = 0;
     protected boolean isMouseDraggingScrollBar;
     protected int prevMouseY;
+    protected IColorPalette colors;
 
-    public GuiScrollableList(int x, int y, int width, int height, List<String> text) {
+    public GuiScrollableList(FontRenderer fontRenderer, IColorPalette colorPalette, int x, int y, int width, int height, String... text) {
+        this.fontRenderer = fontRenderer;
+        this.colors = colorPalette;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        text.forEach(s -> addLines(0, s));
-
         currentIndex = 0;
         maxLinesOnScreen = (height - TEXT_MARGIN * 2) / (fontRenderer.FONT_HEIGHT + TEXT_HEIGHT);
-
         maxIndex = Math.max(0, textLines.size() - maxLinesOnScreen);
+        Arrays.stream(text).forEachOrdered(this::addLines);
     }
 
     public void addLines(int marginSpaces, String... text) {
@@ -45,13 +50,16 @@ public class GuiScrollableList {
         for (int i = 0; i < marginSpaces; i++) builder.append(" ");
         final String indent = builder.toString();
         int maxWidth = width - TEXT_MARGIN * 2 - fontRenderer.getStringWidth(indent) - SCROLLBAR_WIDTH;
-        for (String line : text) {
-            fontRenderer.listFormattedStringToWidth(line, maxWidth).forEach(s -> textLines.add(indent + s));
-        }
+        Arrays.stream(text).forEachOrdered(line -> fontRenderer.listFormattedStringToWidth(line, maxWidth).forEach(s -> textLines.add(indent + s)));
         maxIndex = Math.max(0, textLines.size() - maxLinesOnScreen);
         this.currentIndex = MathHelper.clamp(currentIndex, 0, maxIndex);
     }
 
+    public void addLines(String... text) {
+        addLines(0, text);
+    }
+
+    @Override
     public void handleMouseInput() {
         int amount = Mouse.getEventDWheel();
         if(amount != 0) {
@@ -61,6 +69,7 @@ public class GuiScrollableList {
         }
     }
 
+    @Override
     public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if(isMouseDraggingScrollBar) {
             int diff = mouseY - prevMouseY;
@@ -78,13 +87,15 @@ public class GuiScrollableList {
         }
     }
 
+    @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
         if(this.isMouseDraggingScrollBar) this.isMouseDraggingScrollBar = false;
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        if(mouseButton != GuiConstants.LEFT_MOUSE_BUTTON) return;
         int scrollbarX = x + width - SCROLLBAR_WIDTH;
-        int scrollbarHeight = (int) (((float) maxLinesOnScreen) / textLines.size() * height);
+        int scrollbarHeight = (int) (((float) maxLinesOnScreen) / textLines.size() * (height - 2));
         int scrollOffset = (int) (((float) currentIndex) / (textLines.size() - maxLinesOnScreen) * (height - scrollbarHeight));
         int scrollbarY = y + scrollOffset;
         if(mouseX >= scrollbarX && x <= scrollbarX + SCROLLBAR_WIDTH) {
@@ -98,40 +109,43 @@ public class GuiScrollableList {
         }
     }
 
+    @Override
+    public void drawElement() {
+        drawRect(x - 2, y - 2, x + width + 2, y + height + 2, this.colors.getBorderColor());
+        drawRect(x - 1, y - 1, x + width + 1, y + height + 1, this.colors.getFillColor());
+
+        for(int i = currentIndex; i < Math.min(maxLinesOnScreen + currentIndex, textLines.size()); i++) {
+            this.fontRenderer.drawString(textLines.get(i), x + TEXT_MARGIN, y + TEXT_MARGIN + (fontRenderer.FONT_HEIGHT + TEXT_HEIGHT) * (i - currentIndex), this.colors.getTextColor());
+        }
+
+        int scrollbarX = x + width - SCROLLBAR_WIDTH;
+        int scrollbarHeight = (int) (((float) maxLinesOnScreen) / textLines.size() * (height - 2));
+        int scrollOffset = (int) (((float) currentIndex) / (textLines.size() - maxLinesOnScreen) * (height - scrollbarHeight));
+        int scrollbarY = y + scrollOffset;
+
+        drawRect(scrollbarX, scrollbarY, scrollbarX + SCROLLBAR_WIDTH, scrollbarY + scrollbarHeight, this.colors.getAccentColor());
+    }
+
+    @Override
+    public Rectangle getSize() {
+        return null;
+    }
+
+    @Override
     public void keyTyped(char typedChar, int keyCode) {
-        int scrollAmount = 0;
-        if(keyCode == Keyboard.KEY_DOWN) scrollAmount = 1;
-        else if(keyCode == Keyboard.KEY_UP) scrollAmount = -1;
-        scroll(scrollAmount);
+        switch(keyCode) {
+            case Keyboard.KEY_S:
+            case Keyboard.KEY_DOWN:
+                this.currentIndex = MathHelper.clamp(currentIndex + scrollFactor, 0, maxIndex);
+                break;
+            case Keyboard.KEY_W:
+            case Keyboard.KEY_UP:
+                this.currentIndex = MathHelper.clamp(currentIndex - scrollFactor, 0, maxIndex);
+                break;
+        }
     }
 
     protected void scroll(int rawAmount) {
         this.currentIndex = MathHelper.clamp(currentIndex + (rawAmount * scrollFactor), 0, maxIndex);
-    }
-
-    public void draw() {
-        //drawRect(x, y, x + width, y + height, -6250336);
-        //drawRect(x + 1, y + 1, x + width - 1, y + height - 1, -16777216);
-
-        for(int i = currentIndex; i < Math.min(maxLinesOnScreen + currentIndex, textLines.size()); i++) {
-            fontRenderer.drawString(textLines.get(i), x + TEXT_MARGIN, y + TEXT_MARGIN + (fontRenderer.FONT_HEIGHT + TEXT_HEIGHT) * (i - currentIndex), WHITE);
-        }
-
-        int scrollbarHeight = (int) (((float) maxLinesOnScreen) / textLines.size() * height);
-        int scrollOffset = (int) (((float) currentIndex) / (textLines.size() - maxLinesOnScreen) * (height - scrollbarHeight));
-
-        //drawRect(x + width - SCROLLBAR_WIDTH, y + scrollOffset, x + width, y + scrollbarHeight + scrollOffset, Color.GRAY.getRGB());
-    }
-
-    public void update() {
-        boolean key_down = Keyboard.isKeyDown(Keyboard.KEY_DOWN);
-        if(key_down || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            if(timePressed > 10) {
-                if(key_down) scroll(1);
-                else scroll(-1);
-            }
-            timePressed++;
-        }
-        else timePressed = 0;
     }
 }
