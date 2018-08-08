@@ -1,27 +1,26 @@
 package com.github.upcraftlp.glasspane.vanity;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
-import com.github.upcraftlp.glasspane.net.PacketRequestFeatureSettings;
+import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
+import com.github.upcraftlp.glasspane.api.vanity.VanityPlayerInfo;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
-import com.google.gson.reflect.TypeToken;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,18 +34,15 @@ public class CrystalBall {
 
     private static final Map<UUID, VanityPlayerInfo> VANITY_PLAYER_INFO = new HashMap<>();
 
-    public static boolean canUseFeature(Entity entity, ResourceLocation feature) {
-        VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
-        return info != null && info.hasFeature(feature);
-    }
-
-    public static boolean isFeatureEnabled(Entity entity, String feature) {
-        //TODO query features from server!
-        return false;
-    }
-
     public static boolean canUseFeature(Entity entity, String feature) {
         return canUseFeature(entity, new ResourceLocation(feature));
+    }
+
+    public static boolean canUseFeature(Entity entity, ResourceLocation feature) {
+        if(entity instanceof EntityPlayer) {
+            VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
+            return info != null && info.hasFeature(feature);
+        } else return false;
     }
 
     public static boolean hasVanityFeatures(EntityPlayer player) {
@@ -55,26 +51,30 @@ public class CrystalBall {
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if(event.player instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.player;
-            VANITY_PLAYER_INFO.clear();
+        new Thread(() -> {
             try {
-                String json = IOUtils.toString(new URL(VANITY_URL), StandardCharsets.UTF_8);
-                Type type = new TypeToken<List<VanityPlayerInfo>>(){}.getType();
-                List<VanityPlayerInfo> playerInfo = JsonUtil.GSON.fromJson(json, type);
-                playerInfo.stream().filter(VanityPlayerInfo::hasPlayer).collect(Collectors.toList()).forEach(info -> VANITY_PLAYER_INFO.put(info.getUniqueID(), info));
+                File f = new File(ForgeUtils.MOD_RESOURCES, "vanity_overrides.json");
+                String json;
+                if(f.exists() && !f.isDirectory()) {
+                    GlassPane.getDebugLogger().info("vanity file override detected, skipping web request and loading from file!");
+                    json = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+                } else json = IOUtils.toString(new URL(VANITY_URL), StandardCharsets.UTF_8);
+                VanityPlayerInfo[] playerInfo = JsonUtil.GSON.fromJson(json, VanityPlayerInfo[].class);
+                synchronized(VANITY_PLAYER_INFO) {
+                    VANITY_PLAYER_INFO.clear();
+                    Arrays.stream(playerInfo).filter(VanityPlayerInfo::hasPlayer).collect(Collectors.toList()).forEach(info -> VANITY_PLAYER_INFO.put(info.getUniqueID(), info));
+                }
             } catch(IOException e) {
                 GlassPane.getLogger().error("unable to update vanity information!", e);
             }
-            if(hasVanityFeatures(player)) {
-                NetworkHandler.INSTANCE.sendTo(new PacketRequestFeatureSettings(VANITY_PLAYER_INFO.get(player.getUniqueID())), player);
-            }
-        }
+        }).start();
     }
 
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        VANITY_PLAYER_INFO.remove(event.player.getUniqueID());
+        synchronized(VANITY_PLAYER_INFO) {
+            VANITY_PLAYER_INFO.remove(event.player.getUniqueID());
+        }
     }
 
     /**
@@ -84,5 +84,4 @@ public class CrystalBall {
         boolean forceUpdate = FMLCommonHandler.instance().getSide().isClient(); //always let the server override client settings
 
     }
-
 }

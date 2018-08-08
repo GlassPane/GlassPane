@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.item;
 
-import com.github.upcraftlp.glasspane.api.client.IItemTooltipProvider;
+import com.github.upcraftlp.glasspane.api.item.IItemTooltipProvider;
 import com.github.upcraftlp.glasspane.api.util.NameUtils;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.config.Lens;

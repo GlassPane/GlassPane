@@ -1,7 +1,11 @@
-package com.github.upcraftlp.glasspane.api.color;
+package com.github.upcraftlp.glasspane.api.client.color;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
+@SideOnly(Side.CLIENT)
 public class DynamicColorPalette implements IDynamicColorPalette {
 
     private int borderColor, fillColor, textColor, accentColor;

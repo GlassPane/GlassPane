@@ -1,18 +1,14 @@
-package com.github.upcraftlp.glasspane.vanity;
+package com.github.upcraftlp.glasspane.api.vanity;
 
-import com.github.upcraftlp.glasspane.api.util.serialization.JsonPostProcessable;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftSessionService;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.Arrays;
 import java.util.UUID;
 
-public class VanityPlayerInfo implements JsonPostProcessable {
+public class VanityPlayerInfo {
 
     @SerializedName("id")
     private UUID uuid = new UUID(0, 0);
@@ -20,14 +16,9 @@ public class VanityPlayerInfo implements JsonPostProcessable {
     private String username = "unknown";
     @SerializedName("unlocked")
     private ResourceLocation[] features = new ResourceLocation[0];
-    private transient GameProfile gameProfile;
 
     public VanityPlayerInfo() {
         //NO-OP
-    }
-
-    public GameProfile getGameProfile() {
-        return gameProfile;
     }
 
     public String getUsername() {
@@ -50,13 +41,5 @@ public class VanityPlayerInfo implements JsonPostProcessable {
 
     public UUID getUniqueID() {
         return uuid;
-    }
-
-    @Override
-    public void jsonPostProcess() {
-        GameProfile gp = new GameProfile(uuid, null);
-        MinecraftSessionService sessionService = FMLCommonHandler.instance().getSide().isClient() ? Minecraft.getMinecraft().getSessionService() : FMLCommonHandler.instance().getMinecraftServerInstance().getMinecraftSessionService();
-        this.gameProfile = sessionService.fillProfileProperties(gp, true);
-        this.username = this.gameProfile.getName();
     }
 }

@@ -1,10 +1,10 @@
 package com.github.upcraftlp.glasspane.client.gui.element;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.client.gui.GuiConstants;
-import com.github.upcraftlp.glasspane.api.client.gui.IGuiElement;
-import com.github.upcraftlp.glasspane.api.color.DefaultColors;
-import com.github.upcraftlp.glasspane.api.color.IColorPalette;
+import com.github.upcraftlp.glasspane.api.gui.GuiConstants;
+import com.github.upcraftlp.glasspane.api.gui.IGuiElement;
+import com.github.upcraftlp.glasspane.api.client.color.DefaultColors;
+import com.github.upcraftlp.glasspane.api.client.color.IColorPalette;
 import com.github.upcraftlp.glasspane.api.util.MathUtils;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.FontRenderer;

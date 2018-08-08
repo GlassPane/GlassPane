@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.item.tool;
 
-import com.github.upcraftlp.glasspane.api.client.IItemTooltipProvider;
+import com.github.upcraftlp.glasspane.api.item.IItemTooltipProvider;
 import com.github.upcraftlp.glasspane.api.util.NameUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;

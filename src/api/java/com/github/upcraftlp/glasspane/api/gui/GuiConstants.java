@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.client.gui;
+package com.github.upcraftlp.glasspane.api.gui;
 
 public class GuiConstants {
 

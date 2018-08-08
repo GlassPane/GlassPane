@@ -1,9 +1,13 @@
-package com.github.upcraftlp.glasspane.api.color;
+package com.github.upcraftlp.glasspane.api.client.color;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * some default colors, always in the format {@code #AARRGGBB}
  */
 @SuppressWarnings("WeakerAccess")
+@SideOnly(Side.CLIENT)
 public class DefaultColors {
 
     public static final Foreground FOREGROUND = new Foreground();

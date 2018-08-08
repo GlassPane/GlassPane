@@ -162,6 +162,7 @@ minecraft {
     def fingerPrintKey = project.hasProperty('public_key') ? findProperty('public_key').replace(":", "").toLowerCase(Locale.ROOT) : "undefined"
     replace "@FINGERPRINTKEY@", fingerPrintKey
     replace "@UPDATEJSON@", update_json
+    replace "required-after:forge", "required-after:forge@[" + project.forge_version + ",)"
     replaceIn "${project.reference_class}".replace(".", "/")
 
     if(project.hasProperty('dev_uuid')) {
@@ -203,7 +204,8 @@ dependencies {
 
     runtime "de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}"
 
-    deobfCompile "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
+    deobfProvided "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
+    runtime "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
 
     compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
 

@@ -1,7 +1,8 @@
 package com.github.upcraftlp.glasspane.client.gui;
 
-import com.github.upcraftlp.glasspane.api.color.DefaultPalettes;
-import com.github.upcraftlp.glasspane.api.color.IColorPalette;
+import com.github.upcraftlp.glasspane.api.client.color.DefaultPalettes;
+import com.github.upcraftlp.glasspane.api.client.color.IColorPalette;
+import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.client.gui.element.GuiScrollableList;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.util.ModFingerprint;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,6 +20,8 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.CoreModManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -29,6 +33,7 @@ import java.util.List;
 /**
  * @author UpcraftLP
  */
+@SideOnly(Side.CLIENT)
 public final class GuiScreenInvalidSignature extends GuiScreen {
 
     private static final int MARGIN_SIDE = 15;
@@ -122,7 +127,10 @@ public final class GuiScreenInvalidSignature extends GuiScreen {
 
     @Override
     public void confirmClicked(boolean result, int id) {
-        if(result) mc.displayGuiScreen(null);
+        if(result) {
+            mc.displayGuiScreen(null);
+            ClientUtil.writePersistentData("confirmedModSignatures", new NBTTagByte((byte) 1));
+        }
         else mc.displayGuiScreen(this);
     }
 

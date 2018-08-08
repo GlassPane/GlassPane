@@ -1,8 +1,12 @@
-package com.github.upcraftlp.glasspane.api.color;
+package com.github.upcraftlp.glasspane.api.client.color;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * shared default color palettes that look nice and smooth
  */
+@SideOnly(Side.CLIENT)
 public class DefaultPalettes {
 
     //TODO brown-ish and green colors from vanilla mc

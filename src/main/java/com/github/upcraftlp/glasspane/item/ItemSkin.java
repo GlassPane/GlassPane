@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
+public abstract class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
 
     private static final ResourceLocation CUSTOM_SKIN = new ResourceLocation(GlassPane.MODID, "custom_skin");
 
@@ -26,14 +26,14 @@ public class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
     @Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
         super.onCreated(stack, worldIn, playerIn);
-        this.setSkin(stack, GlassPane.proxy.getSelectedItemSkin(stack, playerIn));
+        this.setSkin(stack, GlassPane.proxy.getSelectedSkin(this.getSkinID(), playerIn));
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getDefaultInstance() {
         ItemStack ret = super.getDefaultInstance();
-        this.setSkin(ret, GlassPane.proxy.getSelectedItemSkin(ret, Minecraft.getMinecraft().player));
+        this.setSkin(ret, GlassPane.proxy.getSelectedSkin(this.getSkinID(), Minecraft.getMinecraft().player));
         return ret;
     }
 
@@ -43,7 +43,7 @@ public class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
     }
 
     @Override
-    public float getSkin(ItemStack stack, @Nullable World world, @Nullable Entity entity) {
+    public int getSkin(ItemStack stack, @Nullable World world, @Nullable Entity entity) {
         return NBTUtil.getDefaultTagCompound(stack).getInteger(CUSTOM_SKIN.toString());
     }
 }

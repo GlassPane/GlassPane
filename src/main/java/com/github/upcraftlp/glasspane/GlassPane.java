@@ -1,17 +1,20 @@
 package com.github.upcraftlp.glasspane;
 
+import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
+import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.client.gui.GuiScreenInvalidSignature;
 import com.github.upcraftlp.glasspane.config.Lens;
-import com.github.upcraftlp.glasspane.net.PacketFeatureSettings;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import com.github.upcraftlp.glasspane.util.ModFingerprint;
+import com.github.upcraftlp.glasspane.util.ModUpdateHandler;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLModContainer;
 import net.minecraftforge.fml.common.Loader;
@@ -54,7 +57,7 @@ public class GlassPane {
     public static final String
             MODID = "glasspane",
             MODNAME = "GlassPane Framework",
-            DEPENDENCIES = "",/*"after:jei@[4.10,);" +
+            DEPENDENCIES = "required-after:forge",/*"after:jei@[4.10,);" +
                             "after:hwyla@[1.8.26,);" +
                             "",*/
             MCVERSIONS = "[1.12,1.13)",
@@ -76,9 +79,11 @@ public class GlassPane {
         GlassPaneAutomatedRegistry.registerDefaultPostProcessors(event.getSide());
         GlassPaneAutomatedRegistry.gatherAnnotatedClasses(event);
         GlassPaneGuideRegistry.initGuideBooks(event);
-        NetworkHandler.INSTANCE.registerMessage(PacketFeatureSettings.class, PacketFeatureSettings.class, NetworkHandler.getNextPacketID(), Side.SERVER);
         NetworkHandler.INSTANCE.registerMessage(PacketOpenGuide.class, PacketOpenGuide.class, NetworkHandler.getNextPacketID(), Side.CLIENT);
+        ModUpdateHandler.registerMod(MODID);
         proxy.preInit(event);
+        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_0"), 1);
+        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_1"), 2);
         if(Lens.debugMode) debugLogger.info("Pre-Initialization complete!", new Object[0]);
     }
 
@@ -156,7 +161,7 @@ public class GlassPane {
                 }
             }
         });
-        if(!INVALID_FINGERPRINTS.isEmpty()) MinecraftForge.EVENT_BUS.register(new GuiScreenInvalidSignature(Lists.newArrayList(INVALID_FINGERPRINTS))); //copy the fingerprint list instead of handing it out
+        if(!INVALID_FINGERPRINTS.isEmpty() && !ClientUtil.getPersistentData().getBoolean("confirmedModSignatures")) MinecraftForge.EVENT_BUS.register(new GuiScreenInvalidSignature(Lists.newArrayList(INVALID_FINGERPRINTS))); //copy the fingerprint list instead of handing it out
         log.info("Mod loading complete.");
     }
 

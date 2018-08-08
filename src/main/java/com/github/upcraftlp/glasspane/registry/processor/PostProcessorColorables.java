@@ -1,8 +1,8 @@
 package com.github.upcraftlp.glasspane.registry.processor;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.client.IBlockColorProvider;
-import com.github.upcraftlp.glasspane.api.client.IItemColorProvider;
+import com.github.upcraftlp.glasspane.api.block.IBlockColorProvider;
+import com.github.upcraftlp.glasspane.api.item.IItemColorProvider;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.block.Block;

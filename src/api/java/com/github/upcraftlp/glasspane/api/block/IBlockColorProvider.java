@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.client;
+package com.github.upcraftlp.glasspane.api.block;
 
 import net.minecraftforge.client.event.ColorHandlerEvent;
 
