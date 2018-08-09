@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public class SkinList extends GuiListExtended {
 
@@ -17,13 +16,23 @@ public class SkinList extends GuiListExtended {
     private final GuiScreenSelectSkin gui;
 
 
-    public SkinList(GuiScreenSelectSkin gui, Map<String, Set<String>> listEntries, Map<Integer, Integer> indexMap) {
+    public SkinList(GuiScreenSelectSkin gui, Map<String, List<String>> listEntries, Map<Integer, Integer> indexMap) {
         super(gui.mc, gui.width, gui.height, GuiScreenSelectSkin.MARGIN_TOP, gui.height - GuiScreenSelectSkin.SLOT_HEIGHT, GuiScreenSelectSkin.SLOT_HEIGHT);
         this.gui = gui;
         int i = 0;
         for(String s : listEntries.keySet()) {
             entries.add(new SkinListEntry(s, listEntries.get(s), indexMap.get(i++)));
         }
+    }
+
+    @Override
+    protected int getScrollBarX() {
+        return this.width - GuiScreenSelectSkin.MARGIN_SIDE * 2 + 3;
+    }
+
+    @Override
+    public int getListWidth() {
+        return this.width - GuiScreenSelectSkin.MARGIN_SIDE * 4;
     }
 
     @Override
@@ -45,23 +54,24 @@ public class SkinList extends GuiListExtended {
 
         private final GuiButton button;
         private final String name;
-        private final String[] captions;
+        private final List<String> captions;
         private int selectedCaptionIndex;
 
-        public SkinListEntry(String name, Set<String> buttonCaptions, int selectedCaptionIndex) {
+        public SkinListEntry(String name, List<String> buttonCaptions, int selectedCaptionIndex) {
             this.name = name;
-            captions = buttonCaptions.toArray(new String[buttonCaptions.size()]);
+            captions = buttonCaptions;
             this.selectedCaptionIndex = selectedCaptionIndex;
-            this.button = new GuiButtonExt(0, 0, 0, captions[selectedCaptionIndex]);
+            this.button = new GuiButtonExt(0, GuiScreenSelectSkin.MARGIN_SIDE, 0, captions.get(this.selectedCaptionIndex).toUpperCase(Locale.ROOT).replace("_", " "));
         }
 
         @Override
-        public void updatePosition(int slotIndex, int x, int y, float partialTicks) {
-        }
+        public void updatePosition(int slotIndex, int x, int y, float partialTicks) {}
 
         @Override
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
-            SkinList.this.mc.fontRenderer.drawString(this.name, SkinList.this.width / 8, y + slotHeight - SkinList.this.mc.fontRenderer.FONT_HEIGHT - 1, DefaultColors.FOREGROUND.WHITE);
+            SkinList.this.mc.fontRenderer.drawString(this.name, x + listWidth / 8, y + (slotHeight - SkinList.this.mc.fontRenderer.FONT_HEIGHT) / 2, DefaultColors.FOREGROUND.WHITE);
+            this.button.y = y + (slotHeight - this.button.height) / 2;
+            this.button.x = x + listWidth - this.button.width - 15;
             this.button.drawButton(SkinList.this.mc, mouseX, mouseY, partialTicks);
         }
 
@@ -69,8 +79,8 @@ public class SkinList extends GuiListExtended {
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
             SkinList.this.gui.selectedIndex = slotIndex;
             if(this.button.mousePressed(SkinList.this.mc, mouseX, mouseY)) {
-                if(++this.selectedCaptionIndex > this.captions.length - 1) this.selectedCaptionIndex = 0;
-                this.button.displayString = captions[this.selectedCaptionIndex].toUpperCase(Locale.ROOT).replace("_", " ");
+                if(++this.selectedCaptionIndex > this.captions.size() - 1) this.selectedCaptionIndex = 0;
+                this.button.displayString = this.captions.get(this.selectedCaptionIndex).toUpperCase(Locale.ROOT).replace("_", " ");
                 SkinList.this.gui.indexMap.put(slotIndex, this.selectedCaptionIndex);
                 return true;
             }

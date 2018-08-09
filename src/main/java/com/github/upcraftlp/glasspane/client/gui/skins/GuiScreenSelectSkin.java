@@ -9,17 +9,17 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class GuiScreenSelectSkin extends GuiScreen {
 
-    public static final int MARGIN_SIDE = 15;
-    public static final int MARGIN_TOP = 15;
+    public static final int MARGIN_SIDE = 35;
+    public static final int MARGIN_TOP = 63;
     public static final int MARGIN_BOTTOM = 50;
-    public static final int SLOT_HEIGHT = 26;
+    public static final int SLOT_HEIGHT = 40;
     public final Int2IntMap indexMap = new Int2IntArrayMap();
-    private Map<String, Set<String>> validOptions;
+    private Map<String, List<String>> validOptions;
 
     private final GuiScreen parentScreen;
     public int selectedIndex;
@@ -52,6 +52,7 @@ public class GuiScreenSelectSkin extends GuiScreen {
     public void initGui() {
         super.initGui();
         this.list = new SkinList(this, validOptions, this.indexMap);
+        this.list.setShowSelectionBox(false);
     }
 
     @Override
@@ -65,5 +66,23 @@ public class GuiScreenSelectSkin extends GuiScreen {
 
         //TODO update server!
         super.onGuiClosed();
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        this.list.handleMouseInput();
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.list.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        this.list.mouseReleased(mouseX, mouseY, state);
     }
 }
