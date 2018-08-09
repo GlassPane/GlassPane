@@ -1,7 +1,6 @@
 package com.github.upcraftlp.glasspane.api.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -52,7 +51,7 @@ public interface IProxy {
 
     }
 
-    default int getSelectedSkin(ResourceLocation skin, EntityPlayer player) {
+    default int getSelectedSkin(String skin, EntityPlayer player) {
         return 0;
     }
 }

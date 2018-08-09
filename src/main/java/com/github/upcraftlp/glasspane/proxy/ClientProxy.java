@@ -2,14 +2,14 @@ package com.github.upcraftlp.glasspane.proxy;
 
 import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.client.resources.DefaultFolderResourcePack;
-import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.event.factory.GlassPaneClientEventFactory;
+import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
+import com.github.upcraftlp.glasspane.client.render.layer.LayerCapeCustom;
 import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -32,8 +32,8 @@ public class ClientProxy implements IProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         GuideHandler.init(event);
-        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_0"), 1);
-        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_1"), 2);
+        SkinnableMapping.addMapping(LayerCapeCustom.GLASSPANE_CAPE_0, 1);
+        SkinnableMapping.addMapping(LayerCapeCustom.GLASSPANE_CAPE_1, 2);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
-    public int getSelectedSkin(ResourceLocation skin, EntityPlayer player) {
-        return ClientUtil.getPersistentData().getCompoundTag("skins").getInteger(skin.getNamespace());
+    public int getSelectedSkin(String skinID, EntityPlayer player) {
+        return ClientUtil.getPersistentData().getCompoundTag("skins").getInteger(skinID);
     }
 }

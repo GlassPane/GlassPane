@@ -1,16 +1,27 @@
 package com.github.upcraftlp.glasspane.client.render.layer;
 
+import com.github.upcraftlp.glasspane.GlassPane;
+import com.github.upcraftlp.glasspane.api.skin.IHasSkin;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerCape;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
-public class LayerCapeCustom extends LayerCape {
+import javax.annotation.Nullable;
+
+public class LayerCapeCustom extends LayerCape implements IHasSkin<EntityPlayer> {
+
+    //TODO add actual cape textures
+    public static final ResourceLocation GLASSPANE_CAPE_0 = new ResourceLocation("glasspane_cape:cape_0");
+    public static final ResourceLocation GLASSPANE_CAPE_1 = new ResourceLocation("glasspane_cape:cape_1");
 
     protected RenderPlayer playerRenderer;
 
@@ -24,6 +35,8 @@ public class LayerCapeCustom extends LayerCape {
     }
 
     protected ResourceLocation getCapeTexture(AbstractClientPlayer player) {
+        int skin = this.getSkin(player, player.world, player);
+        if(skin > 0) return new ResourceLocation(GlassPane.MODID, "textures/capes/cape_" + skin + ".png");
         return player.getLocationCape();
     }
 
@@ -70,5 +83,20 @@ public class LayerCapeCustom extends LayerCape {
                 GlStateManager.popMatrix();
             }
         }
+    }
+
+    @Override
+    public void setSkin(EntityPlayer player, int skin) {
+
+    }
+
+    @Override
+    public int getSkin(EntityPlayer player, @Nullable World world, @Nullable Entity entity) {
+        return GlassPane.proxy.getSelectedSkin(this.getSkinID(), player);
+    }
+
+    @Override
+    public String getSkinID() {
+        return "glasspane_cape";
     }
 }

@@ -38,13 +38,17 @@ public class CrystalBall {
         if(entity instanceof EntityPlayer) {
             VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
             return info != null && info.hasFeature(feature);
-        } else return feature.getPath().equalsIgnoreCase("none");
+        }
+        return false;
     }
 
     public static boolean hasVanityFeatures(EntityPlayer player) {
         return VANITY_PLAYER_INFO.containsKey(player.getUniqueID());
     }
 
+    /**
+     * internal use ONLY!
+     */
     public static void updatePlayerInfo() {
         Thread t = new Thread(() -> {
             try {
@@ -60,7 +64,7 @@ public class CrystalBall {
                 VanityPlayerInfo[] playerInfo = JsonUtil.GSON.fromJson(json, VanityPlayerInfo[].class);
                 synchronized(VANITY_PLAYER_INFO) {
                     VANITY_PLAYER_INFO.clear();
-                    Arrays.stream(playerInfo).collect(Collectors.toList()).forEach(info -> VANITY_PLAYER_INFO.put(info.getUniqueID(), info));
+                    VANITY_PLAYER_INFO.putAll(Arrays.stream(playerInfo).collect(Collectors.toMap(VanityPlayerInfo::getUniqueID, info -> info)));
                 }
                 GlassPane.getLogger().info("successfully loaded data!");
             } catch(IOException e) {

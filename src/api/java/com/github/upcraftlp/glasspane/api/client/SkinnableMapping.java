@@ -25,11 +25,7 @@ public class SkinnableMapping {
     public static void addMapping(ResourceLocation skin, int skinID) {
         Preconditions.checkArgument(skinID > 0, "skin ID must be greater than zero!");
         REGISTERED_SKINS.put(skin, skinID);
-        if(!ENTRIES.containsKey(skin.getNamespace())) {
-            Set<String> set = new TreeSet<>();
-            ENTRIES.put(skin.getNamespace(), set);
-        }
-        ENTRIES.get(skin.getNamespace()).add(skin.getPath());
+        ENTRIES.computeIfAbsent(skin.getNamespace(), key -> new TreeSet<>()).add(skin.getPath());
     }
 
     public static int getSkinIdForRendering(ResourceLocation skin) {
@@ -41,7 +37,10 @@ public class SkinnableMapping {
         EntityPlayer player = Minecraft.getMinecraft().player;
         ENTRIES.forEach((id, set) -> {
             List<String> filtered = set.stream().filter(s -> CrystalBall.canUseFeature(player, new ResourceLocation(id, s))).collect(Collectors.toList());
-            if(!filtered.isEmpty()) ret.put(id, filtered);
+            if(!filtered.isEmpty()) {
+                filtered.add(0, "none");
+                ret.put(id, filtered);
+            }
         });
         return ret;
     }
