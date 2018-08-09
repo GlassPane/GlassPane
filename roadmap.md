@@ -8,7 +8,7 @@
     - [ ] Futuristic
 - [ ] pre-built accept/cancel, yes/no
 - [ ] easy lists
-- [ ] warning for mismatching fingerprints "Continue loading at your own risk" or "Shutdown MC instance"
+- [x] warning for mismatching fingerprints "Continue loading at your own risk" or "Shutdown MC instance"
 - [ ] easy text list
 - [x] color picker utility
 - [x] sliders
@@ -52,7 +52,7 @@
 - [ ] Creative Tab
     - [ ] random icon from tab items
     - [ ] random icon from predefined list
-- [ ] Update-Checker
+- [x] Update-Checker
 - [ ] World Generation
     - [ ] basic ore generation (single block type per vein)
     - [ ] custom generation
@@ -70,7 +70,7 @@
         0:(0, 0, 0)           - single pos (0, 0, 0) in the overworld
         -1:(0, 0, 0):(1, 1, 1) - area from (0, 0, 0) to (1, 1, 1) in the nether
 - [ ] JSON renderer
-- [ ] auto-generate block and item models in hte dev workspace
+- [ ] auto-generate block and item models in the dev workspace
 - [ ] dependency downloader (json-based)
 - [ ] installer (will install latest Forge and the mod)
        
