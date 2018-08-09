@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -80,7 +79,6 @@ public class ModUpdateHandler {
         return outdated;
     }
 
-    @SideOnly(Side.CLIENT)
     @Mod.EventBusSubscriber(modid = GlassPane.MODID, value = Side.CLIENT)
     public static class HandlerClient {
         @SubscribeEvent
@@ -127,7 +125,6 @@ public class ModUpdateHandler {
         }
     }
 
-    @SideOnly(Side.CLIENT)
     @Mod.EventBusSubscriber(modid = GlassPane.MODID, value = Side.SERVER)
     public static class HandlerServer {
         @SubscribeEvent
