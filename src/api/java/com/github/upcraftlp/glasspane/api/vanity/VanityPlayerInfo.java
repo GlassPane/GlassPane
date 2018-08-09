@@ -2,6 +2,7 @@ package com.github.upcraftlp.glasspane.api.vanity;
 
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import com.google.gson.annotations.SerializedName;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -36,7 +37,7 @@ public class VanityPlayerInfo {
 
     @SuppressWarnings("ConstantConditions") //Playerlist#getPlayerByUUID() CAN in fact return null!
     public boolean hasPlayer() {
-        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.getUniqueID()) != null;
+        return (FMLCommonHandler.instance().getSide().isClient() && Minecraft.getMinecraft().getSession().getProfile().getId().equals(this.getUniqueID())) || FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.getUniqueID()) != null;
     }
 
     public UUID getUniqueID() {
