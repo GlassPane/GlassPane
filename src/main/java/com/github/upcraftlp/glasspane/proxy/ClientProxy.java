@@ -1,17 +1,15 @@
 package com.github.upcraftlp.glasspane.proxy;
 
+import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.client.resources.DefaultFolderResourcePack;
-import com.github.upcraftlp.glasspane.api.event.RegisterRenderLayerEvent;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
+import com.github.upcraftlp.glasspane.api.event.factory.GlassPaneClientEventFactory;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -34,19 +32,17 @@ public class ClientProxy implements IProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         GuideHandler.init(event);
+        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_0"), 1);
+        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_1"), 2);
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         //players
-        Minecraft.getMinecraft().getRenderManager().getSkinMap().values().forEach(ClientProxy::onRegisterLayers);
+        Minecraft.getMinecraft().getRenderManager().getSkinMap().values().forEach(GlassPaneClientEventFactory::onRegisterLayers);
 
         //other living entities
-        Minecraft.getMinecraft().getRenderManager().entityRenderMap.entrySet().stream().map(Map.Entry::getValue).forEach(ClientProxy::onRegisterLayers);
-    }
-
-    private static void onRegisterLayers(Render render) {
-        if(render instanceof RenderLivingBase) MinecraftForge.EVENT_BUS.post(new RegisterRenderLayerEvent((RenderLivingBase) render));
+        Minecraft.getMinecraft().getRenderManager().entityRenderMap.entrySet().stream().map(Map.Entry::getValue).forEach(GlassPaneClientEventFactory::onRegisterLayers);
     }
 
     @Override

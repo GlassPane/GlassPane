@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.util;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.event.ModOutdatedEvent;
+import com.github.upcraftlp.glasspane.api.event.factory.GlassPaneEventFactory;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.Minecraft;
@@ -66,7 +66,7 @@ public class ModUpdateHandler {
                     if(Lens.debugMode) GlassPane.getDebugLogger().info("found status {} for mod {}", result.status, mc.getModId());
             }
         });
-        outdated.entrySet().removeIf(entry -> MinecraftForge.EVENT_BUS.post(new ModOutdatedEvent(entry.getKey(), entry.getValue()))); //fire events and remove entries if event was canceled
+        outdated.entrySet().removeIf(entry -> GlassPaneEventFactory.onModOutdated(entry.getKey(), entry.getValue())); //fire events and remove entries if event was canceled
         if(!outdated.isEmpty()) {
             GlassPane.getLogger().warn("Outdated mods detected!");
             outdated.forEach((container, result) -> {

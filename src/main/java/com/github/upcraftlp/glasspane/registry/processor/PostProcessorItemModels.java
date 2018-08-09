@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.registry.processor;
 
-import com.github.upcraftlp.glasspane.api.registry.ICustomItemModelProvider;
+import com.github.upcraftlp.glasspane.api.item.ICustomItemModelProvider;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;

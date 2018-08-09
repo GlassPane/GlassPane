@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.registry;
+package com.github.upcraftlp.glasspane.api.item;
 
 public interface ICustomItemModelProvider {
 

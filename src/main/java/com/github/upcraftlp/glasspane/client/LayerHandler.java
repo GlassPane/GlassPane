@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.client;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.event.RegisterRenderLayerEvent;
+import com.github.upcraftlp.glasspane.api.event.client.RegisterRenderLayerEvent;
 import com.github.upcraftlp.glasspane.client.render.layer.LayerCapeCustom;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;

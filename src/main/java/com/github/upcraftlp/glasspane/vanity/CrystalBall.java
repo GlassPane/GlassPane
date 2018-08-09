@@ -6,12 +6,8 @@ import com.github.upcraftlp.glasspane.api.vanity.VanityPlayerInfo;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -42,46 +38,36 @@ public class CrystalBall {
         if(entity instanceof EntityPlayer) {
             VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
             return info != null && info.hasFeature(feature);
-        } else return false;
+        } else return feature.getPath().equalsIgnoreCase("none");
     }
 
     public static boolean hasVanityFeatures(EntityPlayer player) {
         return VANITY_PLAYER_INFO.containsKey(player.getUniqueID());
     }
 
-    @SubscribeEvent
-    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        new Thread(() -> {
+    public static void updatePlayerInfo() {
+        Thread t = new Thread(() -> {
             try {
                 File f = new File(ForgeUtils.MOD_RESOURCES, "vanity_overrides.json");
                 String json;
                 if(f.exists() && !f.isDirectory()) {
                     GlassPane.getDebugLogger().info("vanity file override detected, skipping web request and loading from file!");
                     json = FileUtils.readFileToString(f, StandardCharsets.UTF_8);
-                } else json = IOUtils.toString(new URL(VANITY_URL), StandardCharsets.UTF_8);
+                } else {
+                    GlassPane.getLogger().info("fetching information from GitHub...");
+                    json = IOUtils.toString(new URL(VANITY_URL), StandardCharsets.UTF_8);
+                }
                 VanityPlayerInfo[] playerInfo = JsonUtil.GSON.fromJson(json, VanityPlayerInfo[].class);
                 synchronized(VANITY_PLAYER_INFO) {
                     VANITY_PLAYER_INFO.clear();
-                    Arrays.stream(playerInfo).filter(VanityPlayerInfo::hasPlayer).collect(Collectors.toList()).forEach(info -> VANITY_PLAYER_INFO.put(info.getUniqueID(), info));
+                    Arrays.stream(playerInfo).collect(Collectors.toList()).forEach(info -> VANITY_PLAYER_INFO.put(info.getUniqueID(), info));
                 }
+                GlassPane.getLogger().info("successfully loaded data!");
             } catch(IOException e) {
                 GlassPane.getLogger().error("unable to update vanity information!", e);
             }
-        }).start();
-    }
-
-    @SubscribeEvent
-    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        synchronized(VANITY_PLAYER_INFO) {
-            VANITY_PLAYER_INFO.remove(event.player.getUniqueID());
-        }
-    }
-
-    /**
-     * used to update the feature state on the client or server
-     */
-    public static void handleFeatureUpdates(NBTTagList list, EntityPlayer player) {
-        boolean forceUpdate = FMLCommonHandler.instance().getSide().isClient(); //always let the server override client settings
-
+        });
+        t.setName(GlassPane.MODNAME + "/Specials");
+        t.start();
     }
 }

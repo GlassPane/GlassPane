@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.registry.processor;
 
-import com.github.upcraftlp.glasspane.api.registry.ICustomBlockModelProvider;
-import com.github.upcraftlp.glasspane.api.registry.ICustomItemModelProvider;
+import com.github.upcraftlp.glasspane.api.block.ICustomBlockModelProvider;
+import com.github.upcraftlp.glasspane.api.item.ICustomItemModelProvider;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.relauncher.Side;

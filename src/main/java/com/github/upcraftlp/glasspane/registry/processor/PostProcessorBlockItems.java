@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.registry.processor;
 
-import com.github.upcraftlp.glasspane.api.registry.IHasItemBlock;
+import com.github.upcraftlp.glasspane.api.block.IHasItemBlock;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
 import net.minecraft.block.Block;

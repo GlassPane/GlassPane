@@ -1,6 +1,5 @@
 package com.github.upcraftlp.glasspane;
 
-import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
@@ -12,9 +11,9 @@ import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import com.github.upcraftlp.glasspane.util.ModFingerprint;
 import com.github.upcraftlp.glasspane.util.ModUpdateHandler;
+import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLModContainer;
 import net.minecraftforge.fml.common.Loader;
@@ -82,8 +81,7 @@ public class GlassPane {
         NetworkHandler.INSTANCE.registerMessage(PacketOpenGuide.class, PacketOpenGuide.class, NetworkHandler.getNextPacketID(), Side.CLIENT);
         ModUpdateHandler.registerMod(MODID);
         proxy.preInit(event);
-        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_0"), 1);
-        SkinnableMapping.addMapping(new ResourceLocation("glasspane_cape:cape_1"), 2);
+        CrystalBall.updatePlayerInfo();
         if(Lens.debugMode) debugLogger.info("Pre-Initialization complete!", new Object[0]);
     }
 
