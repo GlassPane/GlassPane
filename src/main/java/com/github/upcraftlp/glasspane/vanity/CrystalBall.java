@@ -31,7 +31,11 @@ public class CrystalBall {
     private static final Map<UUID, VanityPlayerInfo> VANITY_PLAYER_INFO = new HashMap<>();
 
     public static boolean canUseFeature(Entity entity, String feature) {
-        return canUseFeature(entity, new ResourceLocation(feature));
+        if(entity instanceof EntityPlayer) {
+            VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
+            return info != null && info.hasFeature(feature);
+        }
+        return false;
     }
 
     public static boolean canUseFeature(Entity entity, ResourceLocation feature) {

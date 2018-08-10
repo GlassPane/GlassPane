@@ -26,8 +26,12 @@ public class VanityPlayerInfo {
         return username;
     }
 
+    public boolean hasFeature(String feature) {
+        return Arrays.stream(features).anyMatch(f -> f.getNamespace().equalsIgnoreCase(feature));
+    }
+
     public boolean hasFeature(ResourceLocation feature) {
-        return Arrays.asList(features).contains(feature);
+        return Arrays.stream(features).anyMatch(f -> f.equals(feature));
     }
 
     @Override
