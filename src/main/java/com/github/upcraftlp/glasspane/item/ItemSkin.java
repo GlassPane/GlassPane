@@ -25,7 +25,6 @@ public abstract class ItemSkin extends ItemBase implements IHasSkin<ItemStack> {
 
     @Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-        super.onCreated(stack, worldIn, playerIn);
         this.setSkin(stack, GlassPane.proxy.getSelectedSkin(this.getSkinID(), playerIn));
     }
 

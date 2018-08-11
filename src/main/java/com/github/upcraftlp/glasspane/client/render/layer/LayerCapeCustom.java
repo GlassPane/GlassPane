@@ -31,7 +31,7 @@ public class LayerCapeCustom extends LayerCape implements IHasSkin<EntityPlayer>
     }
 
     protected boolean shouldRender(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        return !player.isInvisible() && player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() != Items.ELYTRA && player.isWearing(EnumPlayerModelParts.CAPE) && (player.hasPlayerInfo() || CrystalBall.canUseFeature(player, this.getSkinID())) && this.getCapeTexture(player) != null;
+        return !player.isInvisible() && player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() != Items.ELYTRA && player.isWearing(EnumPlayerModelParts.CAPE) && (player.hasPlayerInfo() || CrystalBall.canUseFeature(player.getUniqueID(), this.getSkinID())) && this.getCapeTexture(player) != null;
     }
 
     protected ResourceLocation getCapeTexture(AbstractClientPlayer player) {

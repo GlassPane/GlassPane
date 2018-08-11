@@ -4,7 +4,6 @@ import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import com.github.upcraftlp.glasspane.api.vanity.VanityPlayerInfo;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -24,26 +23,18 @@ import java.util.stream.Collectors;
 @Mod.EventBusSubscriber(modid = GlassPane.MODID)
 public class CrystalBall {
 
-    //TODO UUID lookup by username
-    //TODO store externally
     private static final String VANITY_URL = "https://gist.githubusercontent.com/UpcraftLP/f2fd5c5e783e3fc23b85c5184fcd4488/raw/vanity_features.json";
 
     private static final Map<UUID, VanityPlayerInfo> VANITY_PLAYER_INFO = new HashMap<>();
 
-    public static boolean canUseFeature(Entity entity, String feature) {
-        if(entity instanceof EntityPlayer) {
-            VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
-            return info != null && info.hasFeature(feature);
-        }
-        return false;
+    public static boolean canUseFeature(UUID uuid, String feature) {
+        VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(uuid, null);
+        return info != null && info.hasFeature(feature);
     }
 
-    public static boolean canUseFeature(Entity entity, ResourceLocation feature) {
-        if(entity instanceof EntityPlayer) {
-            VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(entity.getUniqueID(), null);
-            return info != null && info.hasFeature(feature);
-        }
-        return false;
+    public static boolean canUseFeature(UUID uuid, ResourceLocation feature) {
+        VanityPlayerInfo info = VANITY_PLAYER_INFO.getOrDefault(uuid, null);
+        return info != null && info.hasFeature(feature);
     }
 
     public static boolean hasVanityFeatures(EntityPlayer player) {
