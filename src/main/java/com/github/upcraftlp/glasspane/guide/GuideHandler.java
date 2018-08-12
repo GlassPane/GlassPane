@@ -85,6 +85,7 @@ public class GuideHandler {
      * internal use ONLY
      */
     public static void init(FMLPreInitializationEvent event) {
+        //FIXME move to client persistent data!
         SAVE_FILE = new File(event.getModConfigurationDirectory(), "glasspanemods/persistent/glasspane_persistent.data");
         if(!SAVE_FILE.exists()) {
             try {

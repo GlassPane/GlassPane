@@ -10,12 +10,16 @@ import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +49,14 @@ public class ClientProxy implements IProxy {
         Minecraft.getMinecraft().getRenderManager().entityRenderMap.entrySet().stream().map(Map.Entry::getValue).forEach(GlassPaneClientEventFactory::onRegisterLayers);
     }
 
+    @Nullable
     @Override
-    public int getSelectedSkin(String skinID, EntityPlayer player) {
-        return ClientUtil.getPersistentData().getCompoundTag("skins").getInteger(skinID);
+    public ResourceLocation getSelectedSkin(String skinID, EntityPlayer player) {
+        NBTTagList tagList = ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING);
+        for(int i = 0; i < tagList.tagCount(); i++) {
+            ResourceLocation rl = new ResourceLocation(tagList.getStringTagAt(i));
+            if(rl.getNamespace().equals(skinID)) return rl.getPath().equals("none") ? null : rl;
+        }
+        return null;
     }
 }

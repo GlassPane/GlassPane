@@ -2,6 +2,7 @@ package com.github.upcraftlp.glasspane.proxy;
 
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,8 +11,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ServerProxy implements IProxy {
 
     @Override
-    public int getSelectedSkin(String skinID, EntityPlayer player) {
+    public ResourceLocation getSelectedSkin(String skinID, EntityPlayer player) {
         //TODO implement skin getter serverside!
-        return 0;
+        return null;
     }
 }

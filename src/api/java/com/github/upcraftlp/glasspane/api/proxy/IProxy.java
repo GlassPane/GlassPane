@@ -1,6 +1,7 @@
 package com.github.upcraftlp.glasspane.api.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IProxy {
@@ -51,7 +53,8 @@ public interface IProxy {
 
     }
 
-    default int getSelectedSkin(String skin, EntityPlayer player) {
-        return 0;
+    @Nullable
+    default ResourceLocation getSelectedSkin(String skin, EntityPlayer player) {
+        return null;
     }
 }

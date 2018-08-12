@@ -20,9 +20,7 @@ public class SkinList extends GuiListExtended {
         super(gui.mc, gui.width, gui.height, GuiScreenSelectSkin.MARGIN_TOP, gui.height - GuiScreenSelectSkin.SLOT_HEIGHT, GuiScreenSelectSkin.SLOT_HEIGHT);
         this.gui = gui;
         int i = 0;
-        for(String s : listEntries.keySet()) {
-            entries.add(new SkinListEntry(s, listEntries.get(s), indexMap.get(i++)));
-        }
+        for(String s : listEntries.keySet()) entries.add(new SkinListEntry(s, listEntries.get(s), indexMap.get(i++)));
     }
 
     @Override

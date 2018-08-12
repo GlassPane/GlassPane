@@ -1,12 +1,17 @@
 package com.github.upcraftlp.glasspane.client.gui.skins;
 
+import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +21,6 @@ public class GuiScreenSelectSkin extends GuiScreen {
 
     public static final int MARGIN_SIDE = 35;
     public static final int MARGIN_TOP = 63;
-    public static final int MARGIN_BOTTOM = 50;
     public static final int SLOT_HEIGHT = 40;
     public final Int2IntMap indexMap = new Int2IntArrayMap();
     private Map<String, List<String>> validOptions;
@@ -28,10 +32,10 @@ public class GuiScreenSelectSkin extends GuiScreen {
     public GuiScreenSelectSkin(GuiScreen screen) {
         this.parentScreen = screen;
         this.validOptions = SkinnableMapping.getValidOptions();
-        NBTTagCompound nbt = ClientUtil.getPersistentData().getCompoundTag("skins");
+        NBTTagList list = ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING);
         int i = 0;
-        for(String id : validOptions.keySet()) {
-            this.indexMap.put(i++, nbt.getInteger(id));
+        for(@SuppressWarnings("unused") String id : validOptions.keySet()) {
+            this.indexMap.put(i, SkinnableMapping.getSkinIdForRendering(new ResourceLocation(list.getStringTagAt(i++))));
         }
     }
 
@@ -58,13 +62,16 @@ public class GuiScreenSelectSkin extends GuiScreen {
     @Override
     public void onGuiClosed() {
         int i = 0;
-        NBTTagCompound nbt = new NBTTagCompound();
-        for(String id : this.validOptions.keySet()) {
-            nbt.setInteger(id, this.indexMap.get(i++));
+        NBTTagList list = new NBTTagList();
+        for(Map.Entry<String, List<String>> e : this.validOptions.entrySet()) {
+            list.appendTag(new NBTTagString(e.getKey() + ":" + e.getValue().get(this.indexMap.get(i++))));
         }
-        ClientUtil.writePersistentData("skins", nbt);
+        ClientUtil.writePersistentData("skins", list);
 
-        //TODO update server!
+        if(Minecraft.getMinecraft().getConnection() != null) {
+            GlassPane.getLogger().error(ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING));  //FIXME remove debug
+            //NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(nbt));
+        }
         super.onGuiClosed();
     }
 

@@ -67,7 +67,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent //FIXME adjust position of gui button and all other GUI elements!
     public static void onRenderGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if(event.getGui() instanceof GuiCustomizeSkin) event.getButtonList().add(new GuiButtonExt(BUTTON_SKIN_GUI_ID, 10, 10, "test"));
+        if(event.getGui() instanceof GuiCustomizeSkin) event.getButtonList().add(new GuiButtonExt(BUTTON_SKIN_GUI_ID, 10, 10, "test")); //TODO localize display string
     }
 
     @SubscribeEvent
