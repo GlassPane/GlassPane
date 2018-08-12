@@ -1,7 +1,6 @@
 package com.github.upcraftlp.glasspane.config;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.gui.EnumGuiBackgroundType;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.config.Config;
@@ -28,9 +27,9 @@ public class Lens {
 
     public static class Client {
 
-        @Config.Name("Gui Background Type")
-        @Config.Comment("The background that should be used for GUIs that support dynamic backgrounds")
-        public EnumGuiBackgroundType guiBackgroundType = EnumGuiBackgroundType.VANILLA;
+        //@Config.Name("Gui Background Type")
+        //@Config.Comment("The background that should be used for GUIs that support dynamic backgrounds")
+        //public EnumGuiBackgroundType guiBackgroundType = EnumGuiBackgroundType.VANILLA;
 
         @Config.Name("Advanced Tooltips")
         @Config.Comment("Show advanced tooltip information?")
