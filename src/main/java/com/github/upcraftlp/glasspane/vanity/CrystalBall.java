@@ -10,12 +10,14 @@ import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -68,5 +70,20 @@ public class CrystalBall {
         });
         t.setName(GlassPane.MODNAME + "/Specials");
         t.start();
+    }
+
+    private static final Map<UUID, List<ResourceLocation>> PLAYER_SETTINGS = new HashMap<>();
+
+    public static void setPlayerSettings(UUID id, List<String> settings) {
+        PLAYER_SETTINGS.put(id, settings.stream().map(s -> new ResourceLocation(s)).filter(feature -> canUseFeature(id, feature)).collect(Collectors.toList()));
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Nullable
+    public static ResourceLocation getSelectedFeature(String id, EntityPlayer player) {
+        if(PLAYER_SETTINGS.containsKey(player.getUniqueID())) {
+            return PLAYER_SETTINGS.get(player.getUniqueID()).stream().filter(rl -> rl.getNamespace().equals(id)).findFirst().get();
+        }
+        return null;
     }
 }

@@ -3,10 +3,13 @@ package com.github.upcraftlp.glasspane.client;
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.client.color.DefaultColors;
 import com.github.upcraftlp.glasspane.api.item.IItemTooltipProvider;
+import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.client.gui.skins.GuiScreenSelectSkin;
 import com.github.upcraftlp.glasspane.config.Lens;
+import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCustomizeSkin;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.resources.I18n;
@@ -15,9 +18,11 @@ import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 
@@ -65,9 +70,21 @@ public class ClientEventHandler {
         }
     }
 
-    @SubscribeEvent //FIXME adjust position of gui button and all other GUI elements!
+    @SubscribeEvent
     public static void onRenderGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if(event.getGui() instanceof GuiCustomizeSkin) event.getButtonList().add(new GuiButtonExt(BUTTON_SKIN_GUI_ID, 10, 10, "test")); //TODO localize display string
+        if(event.getGui() instanceof GuiCustomizeSkin) {
+            GuiButton b = null;
+            for(GuiButton button : event.getButtonList()) {
+                if(button.id == 200) {
+                    b = button;
+                    break;
+                }
+            }
+            if(b != null) { //just in case someone tampers with that screen
+                event.getButtonList().add(new GuiButtonExt(BUTTON_SKIN_GUI_ID, b.x, b.y, b.width, b.height, I18n.format("gui.glasspane.skinnable.button")));
+                b.y += 24;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -75,6 +92,11 @@ public class ClientEventHandler {
         if(Minecraft.getMinecraft().currentScreen instanceof GuiCustomizeSkin && event.getButton().id == BUTTON_SKIN_GUI_ID) {
             Minecraft.getMinecraft().displayGuiScreen(new GuiScreenSelectSkin(event.getGui()));
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerJoin(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+        NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING)));
     }
 
 }

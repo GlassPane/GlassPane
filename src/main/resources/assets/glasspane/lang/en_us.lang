@@ -13,6 +13,7 @@ gui.glasspane.violation.validKeys=found %s available keys:
 gui.glasspane.violation.coremods=Loaded Coremods:
 gui.glasspane.violation.confirm.title=There have been fingerprint validaion mismatches!
 gui.glasspane.violation.confirm.text=Do you really want to continue loading?
+gui.glasspane.skinnable.button=Skin Config
 gui.glasspane.skinnable.overlay=Press %s to open Glasspane skin config!
 
 #Key Bindings

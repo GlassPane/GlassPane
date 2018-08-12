@@ -7,6 +7,7 @@ import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.client.gui.GuiScreenInvalidSignature;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
+import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
 import com.github.upcraftlp.glasspane.registry.GlassPaneAutomatedRegistry;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import com.github.upcraftlp.glasspane.util.ModFingerprint;
@@ -79,6 +80,7 @@ public class GlassPane {
         GlassPaneAutomatedRegistry.gatherAnnotatedClasses(event);
         GlassPaneGuideRegistry.initGuideBooks(event);
         NetworkHandler.INSTANCE.registerMessage(PacketOpenGuide.class, PacketOpenGuide.class, NetworkHandler.getNextPacketID(), Side.CLIENT);
+        NetworkHandler.INSTANCE.registerMessage(PacketUpdateServerSkins.class, PacketUpdateServerSkins.class, NetworkHandler.getNextPacketID(), Side.SERVER);
         ModUpdateHandler.registerMod(MODID);
         proxy.preInit(event);
         CrystalBall.updatePlayerInfo();

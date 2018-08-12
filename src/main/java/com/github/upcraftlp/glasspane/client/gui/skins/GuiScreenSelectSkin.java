@@ -1,8 +1,9 @@
 package com.github.upcraftlp.glasspane.client.gui.skins;
 
-import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
+import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
+import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.minecraft.client.Minecraft;
@@ -23,10 +24,9 @@ public class GuiScreenSelectSkin extends GuiScreen {
     public static final int MARGIN_TOP = 63;
     public static final int SLOT_HEIGHT = 40;
     public final Int2IntMap indexMap = new Int2IntArrayMap();
-    private Map<String, List<String>> validOptions;
-
     private final GuiScreen parentScreen;
     public int selectedIndex;
+    private Map<String, List<String>> validOptions;
     private GuiListExtended list;
 
     public GuiScreenSelectSkin(GuiScreen screen) {
@@ -53,10 +53,28 @@ public class GuiScreenSelectSkin extends GuiScreen {
     }
 
     @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.list.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        this.list.mouseReleased(mouseX, mouseY, state);
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
         this.list = new SkinList(this, validOptions, this.indexMap);
         this.list.setShowSelectionBox(false);
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        this.list.handleMouseInput();
     }
 
     @Override
@@ -69,27 +87,8 @@ public class GuiScreenSelectSkin extends GuiScreen {
         ClientUtil.writePersistentData("skins", list);
 
         if(Minecraft.getMinecraft().getConnection() != null) {
-            GlassPane.getLogger().error(ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING));  //FIXME remove debug
-            //NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(nbt));
+            NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(list));
         }
         super.onGuiClosed();
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        this.list.handleMouseInput();
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        this.list.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-        this.list.mouseReleased(mouseX, mouseY, state);
     }
 }

@@ -1,6 +1,7 @@
 package com.github.upcraftlp.glasspane.proxy;
 
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
+import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,7 +13,6 @@ public class ServerProxy implements IProxy {
 
     @Override
     public ResourceLocation getSelectedSkin(String skinID, EntityPlayer player) {
-        //TODO implement skin getter serverside!
-        return null;
+        return CrystalBall.getSelectedFeature(skinID, player);
     }
 }

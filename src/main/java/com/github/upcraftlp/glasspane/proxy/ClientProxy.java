@@ -7,6 +7,7 @@ import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.client.render.layer.LayerCapeCustom;
 import com.github.upcraftlp.glasspane.guide.GuideHandler;
+import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,6 +53,7 @@ public class ClientProxy implements IProxy {
     @Nullable
     @Override
     public ResourceLocation getSelectedSkin(String skinID, EntityPlayer player) {
+        if(player != Minecraft.getMinecraft().player) return CrystalBall.getSelectedFeature(skinID, player);
         NBTTagList tagList = ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING);
         for(int i = 0; i < tagList.tagCount(); i++) {
             ResourceLocation rl = new ResourceLocation(tagList.getStringTagAt(i));
