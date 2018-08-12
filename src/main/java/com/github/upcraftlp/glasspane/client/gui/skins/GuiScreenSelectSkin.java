@@ -4,8 +4,6 @@ import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,19 +22,19 @@ public class GuiScreenSelectSkin extends GuiScreen {
     public static final int MARGIN_SIDE = 35;
     public static final int MARGIN_TOP = 63;
     public static final int SLOT_HEIGHT = 40;
-    public final Int2IntMap indexMap = new Int2IntArrayMap();
     private final GuiScreen parentScreen;
     public int selectedIndex;
     private Map<String, List<String>> validOptions;
+    public final Map<String, String> indexMap = new HashMap<>();
     private GuiListExtended list;
 
     public GuiScreenSelectSkin(GuiScreen screen) {
         this.parentScreen = screen;
         this.validOptions = SkinnableMapping.getValidOptions();
         NBTTagList list = ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING);
-        int i = 0;
-        for(@SuppressWarnings("unused") String id : validOptions.keySet()) {
-            this.indexMap.put(i, SkinnableMapping.getSkinIdForRendering(new ResourceLocation(list.getStringTagAt(i++))));
+        for(int i = 0; i < list.tagCount(); i++) {
+            ResourceLocation rl = new ResourceLocation(list.getStringTagAt(i));
+            this.indexMap.put(rl.getNamespace(), rl.getPath());
         }
     }
 
@@ -79,13 +78,11 @@ public class GuiScreenSelectSkin extends GuiScreen {
 
     @Override
     public void onGuiClosed() {
-        int i = 0;
         NBTTagList list = new NBTTagList();
-        for(Map.Entry<String, List<String>> e : this.validOptions.entrySet()) {
-            list.appendTag(new NBTTagString(e.getKey() + ":" + e.getValue().get(this.indexMap.get(i++))));
+        for(String s : this.validOptions.keySet()) {
+            list.appendTag(new NBTTagString(s + ":" + this.indexMap.get(s)));
         }
         ClientUtil.writePersistentData("skins", list);
-
         if(Minecraft.getMinecraft().getConnection() != null) {
             NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(list));
         }

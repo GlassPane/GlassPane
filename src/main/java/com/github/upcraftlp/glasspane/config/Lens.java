@@ -9,8 +9,6 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 @Config.LangKey("config.glasspane.general.title")
@@ -28,7 +26,6 @@ public class Lens {
     @Config.Comment({"En/Disable global debug mode", "this is a global flag for all glasspane mods!"})
     public static boolean debugMode = false;
 
-    @SideOnly(Side.CLIENT)
     public static class Client {
 
         @Config.Name("Gui Background Type")
