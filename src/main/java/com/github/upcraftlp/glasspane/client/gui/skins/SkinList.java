@@ -54,6 +54,7 @@ public class SkinList extends GuiListExtended {
         private String selectedCaption;
 
         public SkinListEntry(String name, List<String> buttonCaptions, String selectedCaption) {
+            if(selectedCaption == null) selectedCaption = "none";
             this.name = name;
             captions = buttonCaptions;
             this.button = new GuiButtonExt(0, GuiScreenSelectSkin.MARGIN_SIDE, 0, selectedCaption.toUpperCase(Locale.ROOT).replace("_", " "));
