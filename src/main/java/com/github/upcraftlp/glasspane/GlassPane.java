@@ -3,8 +3,6 @@ package com.github.upcraftlp.glasspane;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
-import com.github.upcraftlp.glasspane.client.ClientUtil;
-import com.github.upcraftlp.glasspane.client.gui.GuiScreenInvalidSignature;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
@@ -14,8 +12,6 @@ import com.github.upcraftlp.glasspane.util.ModFingerprint;
 import com.github.upcraftlp.glasspane.util.ModUpdateHandler;
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLModContainer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -137,6 +133,10 @@ public class GlassPane {
         if(Lens.debugMode) debugLogger.info("Received {} IMC messages!", messages.size());
     }
 
+    public static List<ModFingerprint> getInvalidFingerprints() {
+        return INVALID_FINGERPRINTS;
+    }
+
     @Mod.EventHandler
     public void onLoadComplete(FMLLoadCompleteEvent event) { //this handles ALL mods with invalid fingerprint, so no need to handle the FMLFingerprintViolationEvent
         Loader.instance().getModList().stream().filter(container -> container instanceof FMLModContainer).map(container -> (FMLModContainer) container).filter(container -> ReflectionHelper.getPrivateValue(FMLModContainer.class, container, "fingerprintNotPresent")).forEachOrdered(container -> {
@@ -161,7 +161,7 @@ public class GlassPane {
                 }
             }
         });
-        if(!INVALID_FINGERPRINTS.isEmpty() && !ClientUtil.getPersistentData().getBoolean("confirmedModSignatures")) MinecraftForge.EVENT_BUS.register(new GuiScreenInvalidSignature(Lists.newArrayList(INVALID_FINGERPRINTS))); //copy the fingerprint list instead of handing it out
+        proxy.loadComplete(event);
         log.info("Mod loading complete.");
     }
 

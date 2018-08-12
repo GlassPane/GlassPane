@@ -1,9 +1,11 @@
 package com.github.upcraftlp.glasspane.proxy;
 
+import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.client.resources.DefaultFolderResourcePack;
 import com.github.upcraftlp.glasspane.api.event.factory.GlassPaneClientEventFactory;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
+import com.github.upcraftlp.glasspane.client.gui.GuiScreenInvalidSignature;
 import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.client.Minecraft;
@@ -11,7 +13,9 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -56,5 +60,15 @@ public class ClientProxy implements IProxy {
             if(rl.getNamespace().equals(skinID)) return rl.getPath().equals("none") ? null : rl;
         }
         return null;
+    }
+
+    @Override
+    public void loadComplete(FMLLoadCompleteEvent event) {
+        if(!GlassPane.getInvalidFingerprints().isEmpty() && !ClientUtil.getPersistentData().getBoolean("confirmedModSignatures")) MinecraftForge.EVENT_BUS.register(new GuiScreenInvalidSignature(GlassPane.getInvalidFingerprints()));
+    }
+
+    @Override
+    public EntityPlayer getClientPlayer() {
+        return Minecraft.getMinecraft().player;
     }
 }

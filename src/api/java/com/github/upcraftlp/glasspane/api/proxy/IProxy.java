@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -53,8 +54,16 @@ public interface IProxy {
 
     }
 
+    default void loadComplete(FMLLoadCompleteEvent event) {
+
+    }
+
     @Nullable
     default ResourceLocation getSelectedSkin(String skin, EntityPlayer player) {
+        return null;
+    }
+
+    default EntityPlayer getClientPlayer() {
         return null;
     }
 }
