@@ -17,7 +17,6 @@ import org.lwjgl.input.Keyboard;
 @Config(modid = GlassPane.MODID, name = "glasspanemods/GlassPane") //--> /config/glasspanemods/GlassPane.cfg
 public class Lens {
 
-    @SideOnly(Side.CLIENT)
     @Config.Name("Client Settings")
     @Config.Comment("These settigns affect the client ONLY")
     public static final Client client = new Client();
