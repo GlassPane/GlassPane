@@ -1,11 +1,9 @@
 package com.github.upcraftlp.glasspane.proxy;
 
-import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.client.resources.DefaultFolderResourcePack;
 import com.github.upcraftlp.glasspane.api.event.factory.GlassPaneClientEventFactory;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
-import com.github.upcraftlp.glasspane.client.render.layer.LayerCapeCustom;
 import com.github.upcraftlp.glasspane.guide.GuideHandler;
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.client.Minecraft;
@@ -37,8 +35,6 @@ public class ClientProxy implements IProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         GuideHandler.init(event);
-        SkinnableMapping.addMapping(LayerCapeCustom.GLASSPANE_CAPE_0, 1);
-        SkinnableMapping.addMapping(LayerCapeCustom.GLASSPANE_CAPE_1, 2);
     }
 
     @Override
