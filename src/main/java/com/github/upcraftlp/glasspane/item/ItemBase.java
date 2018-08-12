@@ -39,7 +39,7 @@ public class ItemBase extends Item implements IItemTooltipProvider {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         this.showTooltip(stack, worldIn, tooltip, flagIn);
         if(this.hasAdvancedTooltip(stack) && Lens.client.showAdvancedTooltipInfo) {
-            if(flagIn.isAdvanced() || Keyboard.isKeyDown(Lens.client.keyAdvandedTooltip.getKeyCode())) this.showAdvancedTooltip(stack, worldIn, tooltip, flagIn);
+            if(flagIn.isAdvanced() || Keyboard.isKeyDown(ClientUtil.KEY_ADVANDED_TOOLTIP.getKeyCode())) this.showAdvancedTooltip(stack, worldIn, tooltip, flagIn);
             else tooltip.add(ClientUtil.getKeyInfo(TextFormatting.GRAY, TextFormatting.AQUA).getFormattedText());
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);

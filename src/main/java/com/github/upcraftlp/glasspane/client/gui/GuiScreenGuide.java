@@ -3,7 +3,6 @@ package com.github.upcraftlp.glasspane.client.gui;
 import com.github.upcraftlp.glasspane.api.gui.EnumGuiBackgroundType;
 import com.github.upcraftlp.glasspane.api.gui.IGuiCustomizableBackground;
 import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
-import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -35,7 +34,9 @@ public class GuiScreenGuide extends GuiScreen implements IGuiCustomizableBackgro
     }
 
     public EnumGuiBackgroundType getBackgroundType() {
-        return Lens.client.guiBackgroundType;
+        return EnumGuiBackgroundType.VANILLA;
+        //FIXME separate config enum!
+        //return Lens.client.guiBackgroundType;
     }
 
     @Override

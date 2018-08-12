@@ -2,7 +2,6 @@ package com.github.upcraftlp.glasspane.client;
 
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
-import com.github.upcraftlp.glasspane.config.Lens;
 import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -27,6 +26,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
+import org.lwjgl.input.Keyboard;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -46,6 +46,7 @@ public class ClientUtil {
     public static final File RESOURCES_DIR = ForgeUtils.createNewDirectory(new File(ForgeUtils.MC_DIR, "resources"));
     private static final File TEXTURES_DIR = ForgeUtils.createNewDirectory(new File(ForgeUtils.MOD_RESOURCES, "textures"));
     private static final File PERSISTENT_DATA = new File(ForgeUtils.MOD_RESOURCES, Minecraft.getMinecraft().getSession().getPlayerID() + ".data");
+    public static final KeyBinding KEY_ADVANDED_TOOLTIP = createKeyBinding("tooltip", Keyboard.KEY_LSHIFT); //this has to be changed in the OPTIONS menu, not config screen. It's just here because it belongs here.
     private static NBTTagCompound dataCompound;
 
     private static NBTTagCompound loadData() {
@@ -69,7 +70,7 @@ public class ClientUtil {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
     public static ITextComponent getKeyInfo(TextFormatting textColor, TextFormatting keyColor) {
-        ITextComponent keyInfo = new TextComponentString(Lens.client.keyAdvandedTooltip.getDisplayName()).setStyle(new Style().setColor(keyColor));
+        ITextComponent keyInfo = new TextComponentString(KEY_ADVANDED_TOOLTIP.getDisplayName()).setStyle(new Style().setColor(keyColor));
         return new TextComponentTranslation("tooltip.glasspane.generic.advancedKeyInfo", keyInfo).setStyle(new Style().setColor(textColor));
     }
 

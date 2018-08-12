@@ -36,7 +36,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void preRenderTooltip(RenderTooltipEvent.Pre event) {
         Item item = event.getStack().getItem();
-        shouldTooltipRenderBackgroundColor = item instanceof IItemTooltipProvider && ((IItemTooltipProvider) item).hasAdvancedTooltip(event.getStack()) && Lens.client.showAdvancedTooltipInfo && (Minecraft.getMinecraft().gameSettings.advancedItemTooltips || Keyboard.isKeyDown(Lens.client.keyAdvandedTooltip.getKeyCode()));
+        shouldTooltipRenderBackgroundColor = item instanceof IItemTooltipProvider && ((IItemTooltipProvider) item).hasAdvancedTooltip(event.getStack()) && Lens.client.showAdvancedTooltipInfo && (Minecraft.getMinecraft().gameSettings.advancedItemTooltips || Keyboard.isKeyDown(ClientUtil.KEY_ADVANDED_TOOLTIP.getKeyCode()));
     }
 
     @SubscribeEvent

@@ -11,14 +11,12 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
 public class PostProcessorColorables extends RegistryPostProcessor {
 
     private List<IBlockColorProvider> BLOCK_COLORS = new LinkedList<>();
