@@ -5,12 +5,10 @@ import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.item.ICustomItemModelProvider;
 import com.github.upcraftlp.glasspane.api.skin.IHasSkin;
 import com.github.upcraftlp.glasspane.api.util.NBTUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,8 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -29,7 +25,6 @@ import java.util.Locale;
 public abstract class ItemSkin extends ItemBase implements IHasSkin<ItemStack>, ICustomItemModelProvider {
 
     protected static final ResourceLocation CUSTOM_SKIN = new ResourceLocation(GlassPane.MODID, "custom_skin");
-    protected final IItemPropertyGetter CUSTOM_SKIN_GETTER = (stack, worldIn, entityIn) -> SkinnableMapping.getSkinIdForRendering(this.getSkin(stack, worldIn, entityIn));
 
     public ItemSkin(String name) {
         super(name);
@@ -50,14 +45,6 @@ public abstract class ItemSkin extends ItemBase implements IHasSkin<ItemStack>, 
     @Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
         this.setSelectedSkin(stack, playerIn);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public ItemStack getDefaultInstance() {
-        ItemStack ret = super.getDefaultInstance();
-        this.setSelectedSkin(ret, Minecraft.getMinecraft().player);
-        return ret;
     }
 
     @Override
