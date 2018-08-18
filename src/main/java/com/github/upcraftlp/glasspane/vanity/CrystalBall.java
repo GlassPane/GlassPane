@@ -2,7 +2,6 @@ package com.github.upcraftlp.glasspane.vanity;
 
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
-import com.github.upcraftlp.glasspane.api.vanity.VanityPlayerInfo;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +40,10 @@ public class CrystalBall {
 
     public static boolean hasVanityFeatures(EntityPlayer player) {
         return VANITY_PLAYER_INFO.containsKey(player.getUniqueID());
+    }
+
+    public static boolean hasVanityFeatures(UUID playerID) {
+        return VANITY_PLAYER_INFO.containsKey(playerID);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.vanity;
+package com.github.upcraftlp.glasspane.vanity;
 
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import com.google.gson.annotations.SerializedName;

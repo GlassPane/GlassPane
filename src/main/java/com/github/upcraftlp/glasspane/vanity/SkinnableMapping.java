@@ -1,4 +1,4 @@
-package com.github.upcraftlp.glasspane.api.client;
+package com.github.upcraftlp.glasspane.vanity;
 
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import com.google.common.base.Preconditions;

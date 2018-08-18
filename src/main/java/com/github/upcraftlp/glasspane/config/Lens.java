@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Lens {
 
     @Config.Name("Client Settings")
-    @Config.Comment("These settigns affect the client ONLY")
+    @Config.Comment("These settings affect the client ONLY")
     public static final Client client = new Client();
 
     @Config.Name("Updater Settings")

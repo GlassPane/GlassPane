@@ -18,7 +18,7 @@ public class RegisterRenderLayerEvent extends Event {
     @SuppressWarnings("unchecked")
     public RegisterRenderLayerEvent(RenderLivingBase render) {
         this.render = render;
-        this.layers = ReflectionHelper.getPrivateValue(RenderLivingBase.class, render, "layerRenderers", "field_177097_h"); //TODO srg field name needed?
+        this.layers = ReflectionHelper.getPrivateValue(RenderLivingBase.class, render, "field_177097_h", "h", "layerRenderers");
     }
 
     public void addRenderLayer(LayerRenderer layer) {

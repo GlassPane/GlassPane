@@ -1,7 +1,7 @@
 package com.github.upcraftlp.glasspane.item;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
+import com.github.upcraftlp.glasspane.vanity.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.item.ICustomItemModelProvider;
 import com.github.upcraftlp.glasspane.api.skin.IHasSkin;
 import com.github.upcraftlp.glasspane.api.util.NBTUtil;

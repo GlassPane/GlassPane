@@ -1,6 +1,5 @@
 package com.github.upcraftlp.glasspane.api.util;
 
-import com.github.upcraftlp.glasspane.GlassPane;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -29,7 +28,7 @@ public class ForgeUtils {
             try {
                 FileUtils.forceMkdir(f);
             } catch(IOException e) {
-                GlassPane.getLogger().error("unable to create directory!", e);
+                e.printStackTrace();
             }
         }
         return f;

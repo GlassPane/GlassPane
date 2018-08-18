@@ -36,7 +36,7 @@ version = "${project.mc_version}-" + buildVersion
 def change_log = ext.changeLog
 
 tasks.build.doLast {
-    println("Current version is ${modid}-${version}")
+    println("Current version is ${mod_id}-${version}")
     println("Changelog:")
     println(change_log)
 }
@@ -53,9 +53,9 @@ sourceSets {
     compat {
         compileClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
     }
-
     main {
         runtimeClasspath += sourceSets.compat.runtimeClasspath
+        compileClasspath += api.compileClasspath + api.output
     }
 }
 
@@ -153,7 +153,7 @@ minecraft {
     println('run directory: ' + runDir.toString())
 
     mappings = project.forge_mappings
-    if("${mappings}" != "${project.ext.mappings}") {
+    if("${mappings}" != "${project.ext.mappings}" && "${mappings}".startsWith("snapshot_")) {
         println(String.format("You are on old mappings, latest mappings are %s (you are on %s)", project.ext.mappings, mappings))
     }
     makeObfSourceJar = true
@@ -290,20 +290,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    from "LICENSE"
-    manifest.mainAttributes(
-            "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
-            "Implementation-Title": project.name + '-deobf',
-            "Implementation-Version": project.version,
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:deobf",
-            "Built-On": "${mc_version}-${forge_version}",
-            "FMLAT": "${project.mod_id}_at.cfg"
-    )
-    classifier = 'deobf'
-}
-
 task signApiJar(type: SignJar, dependsOn: apiJar) {
     onlyIf {
         project.hasProperty('sign_keyStore')
@@ -315,19 +301,6 @@ task signApiJar(type: SignJar, dependsOn: apiJar) {
 
     inputFile = apiJar.archivePath
     outputFile = apiJar.archivePath
-}
-
-task signDeobfJar(type: SignJar, dependsOn: deobfJar) {
-    onlyIf {
-        project.hasProperty('sign_keyStore')
-    }
-    keyPass = findProperty('sign_keyPass')
-    keyStore = findProperty('sign_keyStore')
-    storePass = findProperty('sign_storePass')
-    alias = findProperty('sign_alias')
-
-    inputFile = deobfJar.archivePath
-    outputFile = deobfJar.archivePath
 }
 
 task signJavadocJar(type: SignJar, dependsOn: javadocJar) {
@@ -345,16 +318,16 @@ task signJavadocJar(type: SignJar, dependsOn: javadocJar) {
 
 task coreJar(type: Jar) {
     from(sourceSets.main.output) {
-        include 'com/github/upcraftlp/glasspane/asm/**'
+        include String.valueOf(findProperty('core_pacakge')).replace(".", "/") + "/**"
     }
     from "LICENSE"
     manifest.mainAttributes(
-            "Implementation-Title": project.name + "-corePlugin",
+            "Implementation-Title": project.name + "-core",
             "Implementation-Version": "${project.mod_version}",
-            "Built-On": "${project.mc_version}-${project.forge_version}",
+            "Built-On": "${project.mc_version}-${project.forge_version}:core",
             "FMLCorePlugin": "com.github.upcraftlp.craftdevcore.asm.CraftDevLoadingPlugin"
     )
-    classifier 'asm'
+    classifier 'core'
     group = 'build'
 }
 
@@ -379,10 +352,11 @@ task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
 
 jar {
     dependsOn signCoreJar
-    exclude 'com/github/upcraftlp/glasspane/asm/**'
-    from(coreJar.archivePath.absolutePath) {
+    exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
+    if(project.hasProperty('core_package')) from(coreJar.archivePath.absolutePath) {
         include '*'
     }
+    from sourceSets.api.output
     from "LICENSE"
 
     manifest.mainAttributes(
@@ -390,12 +364,24 @@ jar {
             "Implementation-Version": "${project.mod_version}",
             "Built-On": "${project.mc_version}-${project.forge_version}",
             "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
-            "FMLAT": "${project.mod_id}_at.cfg",
-            "ContainedDeps": coreJar.archivePath.name
+            //"FMLAT": "${project.mod_id}_at.cfg",
+
             //"Main-Class": project.installer_main_class
     )
+    if(project.hasProperty('core_package')) manifest.mainAttributes += "ContainedDeps:" + coreJar.archivePath.name
     classifier '' //this is the main jar!
 }
+sourceJar {
+    from sourceSets.api.allJava
+    from "LICENSE"
+    manifest.mainAttributes(
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${project.mod_version}",
+            "Built-On": "${project.mc_version}-${project.forge_version}",
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:sources"
+    )
+}
+
 
 //sign Jar
 task signJar(type: SignJar, dependsOn: reobfJar) {
@@ -411,13 +397,14 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     outputFile = jar.archivePath
 }
 
-tasks.build.dependsOn signJar, signApiJar, signDeobfJar, signJavadocJar
+tasks.build.dependsOn signJar, signApiJar, signJavadocJar
 tasks.curseforge.dependsOn build
 
 artifacts {
     archives apiJar
-    archives deobfJar
     archives javadocJar
+    archives sourceJar
+    if(project.hasProperty('core_package')) archives coreJar
 }
 
 /*publishing {
@@ -482,6 +469,7 @@ curseforge {
             addArtifact javadocJar
             addArtifact sourceJar
             addArtifact apiJar
+            if(project.hasProperty('core_package')) addArtifact coreJar
 
             //addGameVersion '1.12.2' //automatically determined by the CurseGradle plugin
 

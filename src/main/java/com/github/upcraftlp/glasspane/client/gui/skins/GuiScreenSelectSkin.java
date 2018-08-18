@@ -1,17 +1,21 @@
 package com.github.upcraftlp.glasspane.client.gui.skins;
 
-import com.github.upcraftlp.glasspane.api.client.SkinnableMapping;
+import com.github.upcraftlp.glasspane.vanity.SkinnableMapping;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +26,15 @@ public class GuiScreenSelectSkin extends GuiScreen {
     public static final int MARGIN_SIDE = 35;
     public static final int MARGIN_TOP = 63;
     public static final int SLOT_HEIGHT = 40;
+
+    @Nullable
     private final GuiScreen parentScreen;
     public int selectedIndex;
     private Map<String, List<String>> validOptions;
     public final Map<String, String> indexMap = new HashMap<>();
     private GuiListExtended list;
 
-    public GuiScreenSelectSkin(GuiScreen screen) {
+    public GuiScreenSelectSkin(@Nullable GuiScreen screen) {
         this.parentScreen = screen;
         this.validOptions = SkinnableMapping.getValidOptions();
         NBTTagList list = ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING);
@@ -68,12 +74,21 @@ public class GuiScreenSelectSkin extends GuiScreen {
         super.initGui();
         this.list = new SkinList(this, validOptions, this.indexMap);
         this.list.setShowSelectionBox(false);
+        this.buttonList.add(new GuiButtonExt(0, this.width / 2 - 100, this.height - 35, I18n.format("gui.done")));
     }
 
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
         this.list.handleMouseInput();
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        if(button.id == 0) {
+            mc.displayGuiScreen(this.parentScreen);
+        }
     }
 
     @Override

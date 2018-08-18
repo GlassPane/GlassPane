@@ -3,6 +3,7 @@ package com.github.upcraftlp.glasspane.client.gui.skins;
 import com.github.upcraftlp.glasspane.api.client.color.DefaultColors;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.util.ArrayList;
@@ -50,12 +51,14 @@ public class SkinList extends GuiListExtended {
 
         private final GuiButton button;
         private final String name;
+        private final String translatedName;
         private final List<String> captions;
         private String selectedCaption;
 
         public SkinListEntry(String name, List<String> buttonCaptions, String selectedCaption) {
             if(selectedCaption == null) selectedCaption = "none";
             this.name = name;
+            this.translatedName = I18n.format("glasspane.skin." + name);
             captions = buttonCaptions;
             this.button = new GuiButtonExt(0, GuiScreenSelectSkin.MARGIN_SIDE, 0, selectedCaption.toUpperCase(Locale.ROOT).replace("_", " "));
             this.selectedCaption = selectedCaption;
@@ -66,9 +69,10 @@ public class SkinList extends GuiListExtended {
 
         @Override
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
-            SkinList.this.mc.fontRenderer.drawString(this.name, x + listWidth / 8, y + (slotHeight - SkinList.this.mc.fontRenderer.FONT_HEIGHT) / 2, DefaultColors.FOREGROUND.WHITE);
+            SkinList.this.mc.fontRenderer.drawString(this.translatedName, x + listWidth / 8, y + (slotHeight - SkinList.this.mc.fontRenderer.FONT_HEIGHT) / 2, DefaultColors.FOREGROUND.WHITE);
             this.button.y = y + (slotHeight - this.button.height) / 2;
-            this.button.x = x + listWidth - this.button.width - 15;
+            this.button.width = Math.max(mc.fontRenderer.getStringWidth(this.translatedName), listWidth / 4) + 5;
+            this.button.x = x + listWidth - this.button.width - 50;
             this.button.drawButton(SkinList.this.mc, mouseX, mouseY, partialTicks);
         }
 
@@ -76,6 +80,7 @@ public class SkinList extends GuiListExtended {
         public boolean mousePressed(int slotIndex, int mouseX, int mouseY, int mouseEvent, int relativeX, int relativeY) {
             SkinList.this.gui.selectedIndex = slotIndex;
             if(this.button.mousePressed(SkinList.this.mc, mouseX, mouseY)) {
+                this.button.playPressSound(mc.getSoundHandler());
                 int i = this.captions.indexOf(this.selectedCaption);
                 if(++i >= this.captions.size()) i = 0;
                 String caption = this.captions.get(i);

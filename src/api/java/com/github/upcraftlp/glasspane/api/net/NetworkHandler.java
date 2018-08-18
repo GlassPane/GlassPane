@@ -1,6 +1,5 @@
 package com.github.upcraftlp.glasspane.api.net;
 
-import com.github.upcraftlp.glasspane.GlassPane;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,7 +12,7 @@ public class NetworkHandler {
 
     private static int packetID;
 
-    public static SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(GlassPane.MODID);
+    public static SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("glasspane");
 
     /**
      * a message handler to be substituted for side-onl handlers,

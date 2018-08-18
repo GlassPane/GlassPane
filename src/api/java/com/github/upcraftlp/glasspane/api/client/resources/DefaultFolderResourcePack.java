@@ -1,7 +1,5 @@
 package com.github.upcraftlp.glasspane.api.client.resources;
 
-import com.github.upcraftlp.glasspane.GlassPane;
-import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,7 +38,6 @@ public class DefaultFolderResourcePack extends FolderResourcePack {
         }
         catch (IOException exception) {
             if ("pack.mcmeta".equals(resourceName)) {
-                if(Lens.debugMode) GlassPane.getDebugLogger().info("ResourcePack {} is missing a pack.mcmeta file, substituting a dummy one", this.name);
                 return new ByteArrayInputStream(("{\n" +
                         " \"pack\": {\n"+
                         "   \"description\": \"dummy Folder Resourcepack for "+ this.name +"\",\n"+

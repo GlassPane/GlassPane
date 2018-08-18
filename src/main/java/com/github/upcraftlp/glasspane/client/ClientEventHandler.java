@@ -7,6 +7,7 @@ import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.client.gui.skins.GuiScreenSelectSkin;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
+import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -55,14 +56,14 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onPressKey(GuiScreenEvent.KeyboardInputEvent.Post event) {
-        if(Minecraft.getMinecraft().currentScreen instanceof GuiIngameMenu && Keyboard.isKeyDown(KEY_SKIN_GUI.getKeyCode())) { //unpacking the keycode is NEEDED here!
+        if(Minecraft.getMinecraft().currentScreen instanceof GuiIngameMenu && featuresEnabled() && Keyboard.isKeyDown(KEY_SKIN_GUI.getKeyCode())) { //unpacking the keycode is NEEDED here!
             Minecraft.getMinecraft().displayGuiScreen(new GuiScreenSelectSkin(Minecraft.getMinecraft().currentScreen));
         }
     }
 
     @SubscribeEvent
     public static void onRenderGui(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if(event.getGui() instanceof GuiIngameMenu) {
+        if(event.getGui() instanceof GuiIngameMenu && featuresEnabled()) {
             String toDraw = TextFormatting.YELLOW + I18n.format("gui.glasspane.skinnable.overlay", KEY_SKIN_GUI.getDisplayName());
             FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
             int width = fontRenderer.getStringWidth(toDraw);
@@ -70,9 +71,13 @@ public class ClientEventHandler {
         }
     }
 
+    private static boolean featuresEnabled() {
+        return CrystalBall.hasVanityFeatures(Minecraft.getMinecraft().getSession().getProfile().getId());
+    }
+
     @SubscribeEvent
     public static void onRenderGui(GuiScreenEvent.InitGuiEvent.Post event) {
-        if(event.getGui() instanceof GuiCustomizeSkin) {
+        if(event.getGui() instanceof GuiCustomizeSkin && featuresEnabled()) {
             GuiButton b = null;
             for(GuiButton button : event.getButtonList()) {
                 if(button.id == 200) {
@@ -89,7 +94,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onPressButton(GuiScreenEvent.ActionPerformedEvent.Post event) {
-        if(Minecraft.getMinecraft().currentScreen instanceof GuiCustomizeSkin && event.getButton().id == BUTTON_SKIN_GUI_ID) {
+        if(Minecraft.getMinecraft().currentScreen instanceof GuiCustomizeSkin && featuresEnabled() && event.getButton().id == BUTTON_SKIN_GUI_ID) {
             Minecraft.getMinecraft().displayGuiScreen(new GuiScreenSelectSkin(event.getGui()));
         }
     }
