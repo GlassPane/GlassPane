@@ -227,13 +227,13 @@ dependencies {
     deobfCompile "slimeknights:TConstruct:${tcon_version}"
     deobfCompile "slimeknights.mantle:Mantle:${mantle_version}" //dependency for TConstruct
 
-    deobfProvided "refinedstorage:refinedstorage:${rs_version}:api"
+    deobfProvided "refinedstorage:refinedstorage:${rs_version}:com.github.upcraftlp.glasspane.api.api"
     runtime "refinedstorage:refinedstorage:${rs_version}"
 
-    deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:api"
+    deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:com.github.upcraftlp.glasspane.api.api"
     runtime "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
 
-    deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:api"
+    deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:com.github.upcraftlp.glasspane.api.api"
     runtime "team.chisel:Chisel:MC${mc_version}-${chisel_version}"
     runtime "team.chisel.ctm:CTM:MC${ctm_version}"
 
@@ -282,12 +282,12 @@ task apiJar(type: Jar) {
     from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
-            "Implementation-Title": project.name + '-api',
+            "Implementation-Title": project.name + '-com.github.upcraftlp.glasspane.api.api',
             "Implementation-Version": project.version,
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:api",
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:com.github.upcraftlp.glasspane.api.api",
             "Built-On": "${mc_version}-${forge_version}"
     )
-    classifier = 'api'
+    classifier = 'com.github.upcraftlp.glasspane.api.api'
 }
 
 // Javadoc jar

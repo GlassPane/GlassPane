@@ -1,8 +1,8 @@
 package com.github.upcraftlp.glasspane.api.gui;
 
+import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import com.github.upcraftlp.glasspane.api.client.color.ColorPalette;
 import com.github.upcraftlp.glasspane.api.client.color.IColorPalette;
-import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
