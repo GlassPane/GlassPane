@@ -1,27 +1,30 @@
 language: java
 before_install:
-- chmod +x gradlew
+    - chmod +x gradlew
 install:
-- "./gradlew setupCIWorkspace"
+    - "./gradlew setupCIWorkspace"
 script:
-- "./gradlew clean build"
+    - "./gradlew clean build"
 jdk:
-- oraclejdk8
+    - oraclejdk8
 before_cache:
-- find $HOME/.gradle/ -name '*.lock' -print -exec rm -f {} \;
+    - find $HOME/.gradle/ -name '*.lock' -print -exec rm -f {} \;
 cache:
-  directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
+    directories:
+        - "$HOME/.gradle/caches/"
+        - "$HOME/.gradle/wrapper/"
 sudo: false
 before_deploy:
-- export RELEASE_FILE_LIST=$(ls ./build/libs/* | tr '\n' ', ')
-- echo "deploying $RELEASE_FILE_LIST to GitHub releases"
+    - echo "deploying to GitHub release $TRAVIS_TAG:"
+    - echo $(ls  | tr '\n' ', ')
 deploy:
-  provider: releases
-  api_key:
-    secure: $GITHUB_TOKEN
-  file: "{$RELEASE_FILE_LIST}"
-  on:
-    repo: GlassPane/GlassPane
-    tags: true
+    provider: releases
+    api_key:
+        secure: E8dvxD07ElNxglvrppcxCUeuNF/dpxKbJFWBIbkzpjBZbmuNb6Dq+KCsWGkxesVJPANh/ohw9+1joGHO3dcuTLBaQWk9ggJPS9Gu4O0uZexJwKjBL9nzmmNImRgkpJ1+/nybWqVbHYGB+yJlqmW83GZNVpvAw3I3EkggfcasZdJ9HklF5jOhYWSE6p9Ti9gQJFJ8gJGDwhcY+9KFVj5d3DMpxvRtANAN1yXmcAD3H8pIAvqTLCS5YFhWM5rBeH7VQbianh7YfrqYrGSQNxu0O2mjNuvp+7UZ2Ht08QWc2m1jIuHDw2RlIY+BQerfYFjPjHJvj6U0BUFLwIGvMxg5E+gbd5XXnKDl8z8pkZgo9w67N+RvrFxQjbEi5F2aYpsrKLAFfe6+kdyDXjYzeEY/Di8Mw6DJhSzXQj4TtD7p1KGI0B6MI+herid1U+PrzkcK178zNy1o5aTTzjXKiNb9cblPXT5b15s1FCUulswsWP5ssr9cjZrGNtUzsjakcjhAyosG+mznypjSlijJBa/6RDKH8AbGoo9pXfH2sjo7mjyGWopzrDDyKK9GaVz2PPfwEEUg+c5fRNPc0lrgqdr7UAujrnte7A4Em6psFTivGBdE9j+7MyJ6qMTtNOkLZalEU6BjHIC98gyBbSsd8QUDU6nogdUPdaQSiW2IYpOlO9s=
+    file_glob: true
+    file: ./build/libs/*
+    skip_cleanup: true
+    target_commitsh: $TRAVIS_TAG
+    on:
+        repo: GlassPane/GlassPane
+        tags: true
