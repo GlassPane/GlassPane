@@ -8,7 +8,6 @@ script:
 - "./gradlew clean build"
 jdk:
 - oraclejdk8
-- openjdk8
 before_cache:
 - find $HOME/.gradle/ -name '*.lock' -print -exec rm -f {} \;
 cache:
