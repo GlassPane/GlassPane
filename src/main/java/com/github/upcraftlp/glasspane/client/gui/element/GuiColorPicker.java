@@ -6,7 +6,6 @@ import com.github.upcraftlp.glasspane.api.gui.IGuiElement;
 import com.github.upcraftlp.glasspane.api.client.color.DefaultColors;
 import com.github.upcraftlp.glasspane.api.client.color.IColorPalette;
 import com.github.upcraftlp.glasspane.api.util.MathUtils;
-import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPageButtonList;
@@ -89,7 +88,7 @@ public class GuiColorPicker extends Gui implements IGuiElement, GuiPageButtonLis
         this.saturation = (float) saturation;
         this.sliderBrightness.setValue((float) brightness, updateSlider);
         Color color = Color.getHSBColor(this.hue, this.saturation, (float) brightness);
-        if(Lens.debugMode) GlassPane.getDebugLogger().info("Color-Wheel: H: {}, S: {}, B: {}, RGB: #{}", this.hue, this.saturation, brightness, Integer.toHexString(color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
+        if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("Color-Wheel: H: {}, S: {}, B: {}, RGB: #{}", this.hue, this.saturation, brightness, Integer.toHexString(color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
         this.callback.accept(color);
         this.textField.setText(Integer.toHexString(color.getRGB()).substring(2).toUpperCase(Locale.ROOT));
     }

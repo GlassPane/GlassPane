@@ -5,7 +5,6 @@ import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.api.guide.IGuideCategory;
 import com.github.upcraftlp.glasspane.api.guide.IGuidePage;
 import com.github.upcraftlp.glasspane.api.util.serialization.JsonPostProcessable;
-import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.registry.GlassPaneGuideRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +38,7 @@ public class GuideBookImpl implements IGuideBook, JsonPostProcessable {
     @Override
     public void jsonPostProcess() {
         Arrays.stream(this.categories).forEach(category -> {
-            if(Lens.debugMode) GlassPane.getDebugLogger().info("parsing category: {}, pages: {}", category.getId(), category.pages.length);
+            if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("parsing category: {}, pages: {}", category.getId(), category.pages.length);
             for(int i = 0; i < category.pages.length; i++) {
                 IGuidePage page = category.pages[i];
                 //TODO parse page!

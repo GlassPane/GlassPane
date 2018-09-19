@@ -5,7 +5,6 @@ import com.github.upcraftlp.glasspane.api.guide.GuideInject;
 import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.guide.GuideBookImpl;
 import com.github.upcraftlp.glasspane.api.util.ForgeUtils;
-import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.util.JsonUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
@@ -67,7 +66,7 @@ public class GlassPaneGuideRegistry {
         }
         catch (Exception e) {
             GlassPane.getLogger().error("unable to read guide {}: {}", guideName, e.getMessage());
-            if(Lens.debugMode) GlassPane.getDebugLogger().error("full stacktrace:", e);
+            if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().error("full stacktrace:", e);
             GUIDES.remove(guideName);
         }
     }

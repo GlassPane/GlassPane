@@ -4,7 +4,6 @@ import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.block.IBlockColorProvider;
 import com.github.upcraftlp.glasspane.api.item.IItemColorProvider;
 import com.github.upcraftlp.glasspane.api.registry.RegistryPostProcessor;
-import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -25,14 +24,14 @@ public class PostProcessorColorables extends RegistryPostProcessor {
     @SubscribeEvent
     public void handleBlockColors(ColorHandlerEvent.Block event) {
         BLOCK_COLORS.forEach(colorProvider -> colorProvider.registerBlockColors(event));
-        if(Lens.debugMode) GlassPane.getDebugLogger().info("registered {} block color handlers!", BLOCK_COLORS.size());
+        if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("registered {} block color handlers!", BLOCK_COLORS.size());
         BLOCK_COLORS = null;
     }
 
     @SubscribeEvent
     public void handleItemColors(ColorHandlerEvent.Item event) {
         ITEM_COLORS.forEach(colorProvider -> colorProvider.registerItemColors(event));
-        if(Lens.debugMode) GlassPane.getDebugLogger().info("registered {} item color handlers!", ITEM_COLORS.size());
+        if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("registered {} item color handlers!", ITEM_COLORS.size());
         ITEM_COLORS = null;
         MinecraftForge.EVENT_BUS.unregister(this); //This is safe to call because the block color event is fired first and this event subscriber is not used anymore.
     }

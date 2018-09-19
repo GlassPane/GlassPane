@@ -43,7 +43,7 @@ public class ModUpdateHandler {
 
     private static Map<ModContainer, ForgeVersion.CheckResult> logMessages() {
         if(!Lens.updater.showUpdates) {
-            if(Lens.debugMode) GlassPane.getDebugLogger().info("aborting version check becasue it was disabled");
+            if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("aborting version check becasue it was disabled");
             return Collections.emptyMap();
         }
         Map<ModContainer, ForgeVersion.CheckResult> outdated = new HashMap<>();
@@ -62,7 +62,7 @@ public class ModUpdateHandler {
                     break;
                 case AHEAD:
                 case UP_TO_DATE:
-                    if(Lens.debugMode) GlassPane.getDebugLogger().info("found status {} for mod {}", result.status, mc.getModId());
+                    if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("found status {} for mod {}", result.status, mc.getModId());
             }
         });
         outdated.entrySet().removeIf(entry -> GlassPaneEventFactory.onModOutdated(entry.getKey(), entry.getValue())); //fire events and remove entries if event was canceled

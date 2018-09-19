@@ -1,10 +1,10 @@
 package com.github.upcraftlp.glasspane.client.gui;
 
+import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.client.color.DefaultPalettes;
 import com.github.upcraftlp.glasspane.api.client.color.IColorPalette;
 import com.github.upcraftlp.glasspane.client.ClientUtil;
 import com.github.upcraftlp.glasspane.client.gui.element.GuiScrollableList;
-import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.util.ModFingerprint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -111,7 +111,7 @@ public final class GuiScreenInvalidSignature extends GuiScreen {
             else textList.addLines(4, TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC.toString() + "<NONE>");
             textList.addLines(0, "");
         });
-        if(Lens.debugMode) {
+        if(GlassPane.isDebugMode()) {
             textList.addLines(0, "");
             textList.addLines(0, I18n.format("gui.glasspane.violation.coremods"));
             if(CoreModManager.getTransformers().isEmpty()) textList.addLines(2, TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC.toString() + "<NONE>");

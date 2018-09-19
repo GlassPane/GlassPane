@@ -3,7 +3,6 @@ package com.github.upcraftlp.glasspane.guide;
 import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.guide.IGuideBook;
 import com.github.upcraftlp.glasspane.client.gui.GuiScreenGuide;
-import com.github.upcraftlp.glasspane.config.Lens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +51,7 @@ public class GuideHandler {
 
     @SubscribeEvent
     public static void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        if(Lens.debugMode) GlassPane.getDebugLogger().info("writing persistent mod data...");
+        if(GlassPane.isDebugMode()) GlassPane.getDebugLogger().info("writing persistent mod data...");
         NBTTagList list = new NBTTagList();
         for(Map.Entry<ResourceLocation, ResourceLocation> entry : PERSISTENT_PAGES.entrySet()) {
             NBTTagCompound nbtEntry = new NBTTagCompound();

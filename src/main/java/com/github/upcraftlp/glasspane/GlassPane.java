@@ -50,6 +50,8 @@ import static com.github.upcraftlp.glasspane.GlassPane.*;
 )
 public class GlassPane {
 
+    private static final boolean debugMode = false; //global debug flag that overrides the config value if set.
+
     public static final String
             MODID = "glasspane",
             MODNAME = "GlassPane Framework",
@@ -68,7 +70,11 @@ public class GlassPane {
     private static final List<ModFingerprint> INVALID_FINGERPRINTS = new ArrayList<>();
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
-    public static IProxy proxy;
+    public static IProxy proxy = null;
+
+    public static boolean isDebugMode() {
+        return debugMode || Lens.debugMode;
+    }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -80,57 +86,57 @@ public class GlassPane {
         ModUpdateHandler.registerMod(MODID);
         proxy.preInit(event);
         CrystalBall.updatePlayerInfo();
-        if(Lens.debugMode) debugLogger.info("Pre-Initialization complete!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Pre-Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init(event);
-        if(Lens.debugMode) debugLogger.info("Initialization complete!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
         GlassPaneAutomatedRegistry.cleanup();
-        if(Lens.debugMode) debugLogger.info("Post-Initialization complete!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Post-Initialization complete!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverAboutToStarting(FMLServerAboutToStartEvent event) {
         proxy.serverAboutToStart(event);
-        if(Lens.debugMode) debugLogger.info("Server is going to start!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Server is going to start!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         proxy.serverStarting(event);
-        if(Lens.debugMode) debugLogger.info("Starting up the server!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Starting up the server!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
         proxy.serverStarted(event);
-        if(Lens.debugMode) debugLogger.info("Server has started!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Server has started!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
         proxy.serverStopping(event);
-        if(Lens.debugMode) debugLogger.info("Server is going to stop!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Server is going to stop!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         proxy.serverStopped(event);
-        if(Lens.debugMode) debugLogger.info("Server has stopped!", new Object[0]);
+        if(isDebugMode()) debugLogger.info("Server has stopped!", new Object[0]);
     }
 
     @Mod.EventHandler
     public void handleModMessages(FMLInterModComms.IMCEvent event) {
         List<FMLInterModComms.IMCMessage> messages = event.getMessages();
         proxy.handleInterModMessages(messages);
-        if(Lens.debugMode) debugLogger.info("Received {} IMC messages!", messages.size());
+        if(isDebugMode()) debugLogger.info("Received {} IMC messages!", messages.size());
     }
 
     public static List<ModFingerprint> getInvalidFingerprints() {
@@ -145,7 +151,7 @@ public class GlassPane {
             if(expectedKey != null) {
                 File source = container.getSource();
                 Set<String> fingerPrints = ReflectionHelper.getPrivateValue(FMLModContainer.class, (FMLModContainer) container, "sourceFingerprints");
-                if(source.isDirectory() && Lens.debugMode) {
+                if(source.isDirectory() && isDebugMode()) {
                     debugLogger.warn("{} has a mismatching fingerprint key!", source.getAbsolutePath());
                     debugLogger.warn("{} is a directory!", source.getAbsolutePath());
                 }
