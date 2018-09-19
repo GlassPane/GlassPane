@@ -1,0 +1,30 @@
+language: java
+
+before_install:
+- chmod +x gradlew
+- "./gradlew cleanCache"
+install:
+- "./gradlew setupCIWorkspace"
+script:
+- "./gradlew clean build"
+jdk:
+- oraclejdk8
+- openjdk8
+before_cache:
+- find $HOME/.gradle/ -name '*.lock' -print -exec rm -f {} \;
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+sudo: false
+before_deploy:
+- export RELEASE_FILE_LIST=$(ls ./build/libs/* | tr '\n' ', ')
+- echo "deploying $RELEASE_FILE_LIST to GitHub releases"
+deploy:
+  provider: releases
+  api_key:
+    secure: Vmql/9cIvPTg84RMa4YBkyy0w5sS8ICUY+GIEVrRlIAizZzJE0nHyrf072abbUB1bZl/lUyDHdGCLVQ9ggGxUTOnMShC7uUzGrerRHc4cRSJv2OFCf/OsqQqnENctifyacOk1jDBnzv0FIIokX4k+4xR63BF5mIbjdxGH3peKHESwWE9iAxzkeHDWLBhwQ76cyznX6HMhn5myr/35Ktc+BXXjf1oWLSJ4GAMVXocayxPS6Vh/5QzzNO09RJfYGMxZan+/rHEX+RRCAZbLGIcUhXggvGS3MBY1Xm6mSY+ZWFoMUifMs7/aVf3soE24vlCBKH4Y7KQF8ARyYFsCZ81OwK/5zQyww7+hIa+de089sUcUndvITSmE7WT60nllHIlX01fo/j88bqlDP+7PW7GGs2BiQsTcl+ZSa45few7040QE9eWEEzeRsfTNqCNbM6l+lx6ToDtvGhub/w9n4kh2RV+H2glDF3WL7qa2tjuBrQFwZT4tKazLOsfgZC+SGfVErMb+jcabesU3OVc+Adnh3vdB8+qvPBxoQ/X9BhBRgltpxca/1bpQDOgHJuJPOjnvVxaJQGgXVWGuEZRjXwzIQRSfd5HRJq0znR0WhaeZxEzo+Z+EohudZx/Vvr2BsJyKgzCPoyc8jPqU6UKRIXJuKgi3IIOgoI5nbsZ3v17CzA=
+  file: "{$RELEASE_FILE_LIST}"
+  on:
+    repo: GlassPane/GlassPane
+    tags: true
