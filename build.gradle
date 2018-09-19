@@ -17,9 +17,13 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+
+plugins {
+    id 'maven-publish'
+}
+
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'net.minecraftforge.gradle.forge'
-//apply plugin: 'maven-publish'
 apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw/mod_script.gradle'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
@@ -49,94 +53,104 @@ compileJava {
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-sourceSets {
-    compat {
-        compileClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
-    }
-    main {
-        runtimeClasspath += sourceSets.compat.runtimeClasspath
-        compileClasspath += api.compileClasspath + api.output
-    }
+def addProjectSourceSetIDE(final String sourceSet) {
+    File javaSource = file("src/" + sourceSet + "/java")
+    if(javaSource.exists()) idea.module.sourceDirs += javaSource
+
+    File resources = file("src/" + sourceSet + "/resources")
+    if(resources.exists()) idea.module.resourceDirs += resources
 }
 
-repositories {
-    maven {
-        //JEI files
-        name = "DVS1 Maven FS"
-        url = "http://dvs1.progwml6.com/files/maven"
+sourceSets {
+    debug.compileClasspath += main.compileClasspath + main.output
+    compat.compileClasspath += main.compileClasspath + main.output
+    main {
+        compileClasspath += compat.output
+        runtimeClasspath += debug.output
     }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "http://modmaven.k-4u.nl"
-    }
+    addProjectSourceSetIDE(api.getName())
+    addProjectSourceSetIDE(compat.getName())
+    addProjectSourceSetIDE(debug.getName())
+}
 
-    maven {
-        //hwyla
-        name = "TehNut"
-        url = "https://tehnut.info/maven"
-    }
+allprojects {
 
-    maven {
-        name = "Thiakill"
-        url = "http://maven.thiakil.com"
-    }
-
-    maven {
-        name = "refinedstorage"
-        url = "https://repo.raoulvdberge.com"
-    }
-
-    maven {
-        name = "MMD"
-        url = "https://maven.mcmoddev.com"
-    }
-
-    maven {
-        name = "CoFH"
-        url = "http://maven.covers1624.net"
-    }
-
-    maven {
-        name = "tterag"
-        url = "https://maven.tterrag.com"
-    }
-
-    maven {
-        name = "chickenbones"
-        url = "http://chickenbones.net/maven"
-    }
-
-    maven {
-        name "jared maven"
-        url "http://blamejared.com/maven"
-    }
-
-    maven {
-        name = "chaosfield" //fallback for ellpeck's mods
-        url = "https://maven.chaosfield.at"
-    }
-
+    repositories {
     //local maven, if present
-    mavenLocal()
+        mavenLocal()
+        jcenter()
+        mavenCentral()
 
-    maven {
-        //fallback for almost everything, this is CurseForge :P
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven"
+        maven {
+            //JEI files
+            name = "DVS1 Maven FS"
+            url = "http://dvs1.progwml6.com/files/maven"
+        }
+        maven {
+            // location of a maven mirror for JEI files, as a fallback
+            name = "ModMaven"
+            url = "http://modmaven.k-4u.nl"
+        }
+
+        maven {
+            //hwyla
+            name = "TehNut"
+            url = "https://tehnut.info/maven"
+        }
+
+        maven {
+            name = "Thiakill"
+            url = "http://maven.thiakil.com"
+        }
+
+        maven {
+            name = "refinedstorage"
+            url = "https://repo.raoulvdberge.com"
+        }
+
+        maven {
+            name = "MMD"
+            url = "https://maven.mcmoddev.com"
+        }
+
+        maven {
+            name = "CoFH"
+            url = "http://maven.covers1624.net"
+        }
+
+        maven {
+            name = "tterag"
+            url = "https://maven.tterrag.com"
+        }
+
+        maven {
+            name = "chickenbones"
+            url = "http://chickenbones.net/maven"
+        }
+
+        maven {
+            name "jared maven"
+            url "http://blamejared.com/maven"
+        }
+
+        maven {
+            name = "chaosfield" //fallback for ellpeck's mods
+            url = "https://maven.chaosfield.at"
+        }
+
+        maven {
+            //fallback for almost everything, this is CurseForge :P
+            name = "CurseForge"
+            url = "https://minecraft.curseforge.com/api/maven"
+        }
+
+        maven {
+            //get dependencies from github
+            name = "JitPack"
+            url = "https://jitpack.io"
+        }
+
     }
-
-    maven {
-        //get dependencies from github
-        name = "JitPack"
-        url = "https://jitpack.io"
-    }
-
-    /*maven { //FIXME broken maven!
-        //headcrumbs
-        name = "theProgrammingTurkey"
-        url = "https://maven.theprogrammingturkey.com"
-    }*/
 }
 
 minecraft {
@@ -205,7 +219,7 @@ dependencies {
     runtime "de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}"
 
     deobfProvided "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
-    runtime "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
+    //runtime "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
 
     compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
 
@@ -407,12 +421,11 @@ artifacts {
     if(project.hasProperty('core_package')) archives coreJar
 }
 
-/*publishing {
+publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
             artifact apiJar
-            artifact deobfJar
             artifact javadocJar
         }
     }
@@ -420,7 +433,7 @@ artifacts {
     repositories {
         mavenLocal()
     }
-}*/
+}
 
 def curseRelations = {
     //optionalLibrary 'jei'
