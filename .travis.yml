@@ -2,7 +2,6 @@ language: java
 
 before_install:
 - chmod +x gradlew
-- "./gradlew cleanCache"
 install:
 - "./gradlew setupCIWorkspace"
 script:
