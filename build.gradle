@@ -278,7 +278,7 @@ task apiJar(type: Jar) {
         project.hasProperty("api_package")
     }
     from sourceSets.api.allJava
-    include new String(findProperty("api_package") + "/**").replace(".", "/")
+    include String.valueOf(findProperty("api_package")).replace(".", "/") + "/**"
     from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
@@ -332,7 +332,7 @@ task signJavadocJar(type: SignJar, dependsOn: javadocJar) {
 
 task coreJar(type: Jar) {
     from(sourceSets.main.output) {
-        include String.valueOf(findProperty('core_pacakge')).replace(".", "/") + "/**"
+        include String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
     }
     from "LICENSE"
     manifest.mainAttributes(
