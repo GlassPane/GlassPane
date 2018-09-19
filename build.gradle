@@ -2,7 +2,9 @@ import java.time.Year
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
+        mavenCentral()
         maven {
             name = "Forge"
             url = "http://files.minecraftforge.net/maven"
