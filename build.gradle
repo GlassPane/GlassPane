@@ -318,15 +318,10 @@ task coreJar(type: Jar) {
     )
     classifier 'core'
     group = 'build'
+    enabled = project.hasProperty('core_package')
 }
 
-reobf {
-    coreJar {
-        mappingType = 'SEARGE'
-    }
-}
-
-task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
+task signCoreJar(type: SignJar) {
     onlyIf {
         project.hasProperty('sign_keyStore')
     }
@@ -339,16 +334,16 @@ task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
     outputFile = coreJar.archivePath
 }
 
-jar {
-    dependsOn signCoreJar
-    if(project.hasProperty('core_package')) {
-        exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
-        from(coreJar.archivePath.absolutePath) {
-            include '*'
+if(project.hasProperty('core_package')) {
+    reobf {
+        coreJar {
+            mappingType = 'SEARGE'
         }
     }
-    from "LICENSE"
+}
 
+jar {
+    from "LICENSE"
     manifest.mainAttributes(
             "Implementation-Title": project.name,
             "Implementation-Version": "${project.mod_version}",
@@ -358,7 +353,13 @@ jar {
 
             //"Main-Class": project.installer_main_class
     )
-    if(project.hasProperty('core_package')) manifest.mainAttributes += "ContainedDeps:" + coreJar.archivePath.name
+    if(project.hasProperty('core_package')) {
+        exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
+        from(coreJar.archivePath.absolutePath) {
+            include '*'
+        }
+        manifest.mainAttributes += "ContainedDeps:" + coreJar.archivePath.name
+    }
     classifier '' //this is the main jar!
 }
 sourceJar {
@@ -387,6 +388,10 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     outputFile = jar.archivePath
 }
 
+if(project.hasProperty('core_package')) {
+    tasks.jar.dependsOn signCoreJar
+    tasks.signCoreJar.dependsOn reobfCoreJar
+}
 tasks.build.dependsOn signJar, signApiJar, signJavadocJar
 tasks.curseforge.dependsOn build
 
