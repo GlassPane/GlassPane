@@ -2,9 +2,7 @@ import java.time.Year
 
 buildscript {
     repositories {
-        mavenLocal()
         jcenter()
-        mavenCentral()
         maven {
             name = "Forge"
             url = "http://files.minecraftforge.net/maven"
@@ -50,36 +48,12 @@ tasks.build.doLast {
 group = project.maven_group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = project.mod_id
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8 // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-def addProjectSourceSetIDE(final String sourceSet) {
-    File javaSource = file("src/" + sourceSet + "/java")
-    if(javaSource.exists()) idea.module.sourceDirs += javaSource
-
-    File resources = file("src/" + sourceSet + "/resources")
-    if(resources.exists()) idea.module.resourceDirs += resources
-}
-
-sourceSets {
-    debug.compileClasspath += main.compileClasspath + main.output
-    compat.compileClasspath += main.compileClasspath + main.output
-    main {
-        compileClasspath += compat.output
-        runtimeClasspath += debug.output
-    }
-    addProjectSourceSetIDE(api.getName())
-    addProjectSourceSetIDE(compat.getName())
-    addProjectSourceSetIDE(debug.getName())
-}
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 allprojects {
 
     repositories {
-    //local maven, if present
-        mavenLocal()
+        mavenLocal() //local maven, if present
         jcenter()
         mavenCentral()
 
@@ -141,7 +115,6 @@ allprojects {
         }
 
         maven {
-            //fallback for almost everything, this is CurseForge :P
             name = "CurseForge"
             url = "https://minecraft.curseforge.com/api/maven"
         }
@@ -229,13 +202,13 @@ dependencies {
     deobfCompile "slimeknights:TConstruct:${tcon_version}"
     deobfCompile "slimeknights.mantle:Mantle:${mantle_version}" //dependency for TConstruct
 
-    deobfProvided "refinedstorage:refinedstorage:${rs_version}:com.github.upcraftlp.glasspane.api.api"
+    deobfProvided "refinedstorage:refinedstorage:${rs_version}:api"
     runtime "refinedstorage:refinedstorage:${rs_version}"
 
-    deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:com.github.upcraftlp.glasspane.api.api"
+    deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:api"
     runtime "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
 
-    deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:com.github.upcraftlp.glasspane.api.api"
+    deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:api"
     runtime "team.chisel:Chisel:MC${mc_version}-${chisel_version}"
     runtime "team.chisel.ctm:CTM:MC${ctm_version}"
 
@@ -279,17 +252,17 @@ task apiJar(type: Jar) {
     onlyIf{
         project.hasProperty("api_package")
     }
-    from sourceSets.api.allJava
+    from sourceSets.main.allJava
     include String.valueOf(findProperty("api_package")).replace(".", "/") + "/**"
     from "LICENSE"
     manifest.mainAttributes(
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
-            "Implementation-Title": project.name + '-com.github.upcraftlp.glasspane.api.api',
+            "Implementation-Title": project.name + '-api',
             "Implementation-Version": project.version,
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:com.github.upcraftlp.glasspane.api.api",
+            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:api",
             "Built-On": "${mc_version}-${forge_version}"
     )
-    classifier = 'com.github.upcraftlp.glasspane.api.api'
+    classifier = 'api'
 }
 
 // Javadoc jar
@@ -368,11 +341,12 @@ task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
 
 jar {
     dependsOn signCoreJar
-    exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
-    if(project.hasProperty('core_package')) from(coreJar.archivePath.absolutePath) {
-        include '*'
+    if(project.hasProperty('core_package')) {
+        exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
+        from(coreJar.archivePath.absolutePath) {
+            include '*'
+        }
     }
-    from sourceSets.api.output
     from "LICENSE"
 
     manifest.mainAttributes(
