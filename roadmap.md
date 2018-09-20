@@ -9,7 +9,7 @@
 - [ ] pre-built accept/cancel, yes/no
 - [ ] easy lists
 - [x] warning for mismatching fingerprints "Continue loading at your own risk" or "Shutdown MC instance"
-- [ ] easy text list
+- [x] easy text list
 - [x] color picker utility
 - [x] sliders
 
@@ -31,6 +31,7 @@
     - [ ] HTML-based
     - [x] guide item
 - [x] base skinnable item
+
 -----
 ##Structures:
 - [ ] nbt
@@ -63,7 +64,9 @@
 - [ ] Extra Events
     - [ ] Biome Temperature Event (requires manual activation)
     - [ ] Sword SweepEvent (WIP)
-    - [ ] Enchantability Event
+    - [ ] Enchantability Event //will probably be added to Forge instead
+    - [x] Event for registering additional render layers for entities
+    - [x] event informing about outdated mods (for the Update-Checker)
 - [ ] Server Rescue
     - List of compromised Block positions to be cleared at world load
         ex:
@@ -73,11 +76,16 @@
 - [ ] auto-generate block and item models in the dev workspace
 - [ ] dependency downloader (json-based)
 - [ ] installer (will install latest Forge and the mod)
-       
+- [x] convenient registration methods using an Annotation
+- [x] simple capability providers
+- [x] simple color palettes
+- [x] folder resourcepack
+- [x] convenient loading of additional resources from the `/resources` folder
+
 ---
 ## Vanity
-- [ ] basic user matcher
-- [ ] modular feature sets for users
+- [x] basic user matcher
+- [x] modular feature sets for users
 
 ---
 ## Additions

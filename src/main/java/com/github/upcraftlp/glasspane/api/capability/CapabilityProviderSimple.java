@@ -35,9 +35,16 @@ public class CapabilityProviderSimple<HANDLER> implements ICapabilityProvider {
         this.instance = instance;
     }
 
-    @Deprecated
-    public CapabilityProviderSimple(@Nullable final HANDLER instance, final Capability<HANDLER> capability, @Nullable final EnumFacing facing) {
-        this(capability, facing, instance);
+    public CapabilityProviderSimple(final Capability<HANDLER> capability, @Nullable final HANDLER instance) {
+        this(capability, null, instance);
+    }
+
+    public CapabilityProviderSimple(final Capability<HANDLER> capability, @Nullable final EnumFacing facing) {
+        this(capability, facing, capability.getDefaultInstance());
+    }
+
+    public CapabilityProviderSimple(final Capability<HANDLER> capability) {
+        this(capability, (EnumFacing) null);
     }
 
     /**
