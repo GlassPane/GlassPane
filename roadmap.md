@@ -32,15 +32,6 @@
     - [x] guide item
 - [x] base skinnable item
 
------
-##Structures:
-- [ ] nbt
-- [ ] schematic
-- [ ] custom format (--> st0rm)
-- [ ] importer (--> file selector)
-- [ ] exporter (--> save to external file)
-- [ ] placement preview
-
 ---
 ## MISC
 - [ ] EULA (?)
@@ -77,10 +68,19 @@
 - [ ] dependency downloader (json-based)
 - [ ] installer (will install latest Forge and the mod)
 - [x] convenient registration methods using an Annotation
+    - [x] post-processing registered elements
 - [x] simple capability providers
 - [x] simple color palettes
 - [x] folder resourcepack
 - [x] convenient loading of additional resources from the `/resources` folder
+- [x] JSON (De)Serializer for utility
+- [ ] easy structure loading
+    - [ ] nbt
+    - [ ] schematic
+    - [ ] custom format (--> st0rm)
+    - [ ] importer (--> file selector)
+    - [ ] exporter (--> save to external file)
+    - [ ] placement preview
 
 ---
 ## Vanity
