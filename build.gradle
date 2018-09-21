@@ -408,6 +408,8 @@ publishing {
             artifact jar
             artifact apiJar
             artifact javadocJar
+            artifact sourceJar
+            if(project.hasProperty('core_package')) artifact coreJar
         }
     }
 
