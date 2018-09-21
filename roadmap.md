@@ -96,5 +96,5 @@
 - [ ] Bow Infinity Fix
 - [ ] bed sleep bug fix
 - [ ] slab over chest toggle
-- [ ] Chat Color Code Support by typing `&0-f` [Colors](https://minecraft.gamepedia.com/Formatting_codes "Formatting Codes - Minecraft Wiki")
+- [x] Chat Color Code Support by typing `&0-f` [Colors](https://minecraft.gamepedia.com/Formatting_codes "Formatting Codes - Minecraft Wiki")
 - [ ] CobWebs can be crafted with 5 Strings

@@ -9,16 +9,12 @@ import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
 import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiCustomizeSkin;
-import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.Mod;
@@ -103,5 +99,4 @@ public class ClientEventHandler {
     public static void onServerJoin(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         NetworkHandler.INSTANCE.sendToServer(new PacketUpdateServerSkins(ClientUtil.getPersistentData().getTagList("skins", Constants.NBT.TAG_STRING)));
     }
-
 }

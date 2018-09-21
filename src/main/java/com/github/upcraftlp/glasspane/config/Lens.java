@@ -1,8 +1,7 @@
 package com.github.upcraftlp.glasspane.config;
 
 import com.github.upcraftlp.glasspane.GlassPane;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.common.config.*;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,6 +20,14 @@ public class Lens {
     @Config.Name("Debug Mode")
     @Config.Comment({"En/Disable global debug mode", "this is a global flag for all glasspane mods!"})
     public static boolean debugMode = false;
+
+    @Config.Name("Colored Chat Messages")
+    @Config.Comment("If enabled, will convert \u0026, followed by a formatting code to the respective formatting code in chat messages. \u0026\u0026 to escape.")
+    public static boolean colorChat = true;
+
+    @Config.Name("Color OP Player Names")
+    @Config.Comment({"If enabled, will tint the name of opped players red in chat messages", "will have no effect if chat color formatting is disabled"})
+    public static boolean colorOps = false;
 
     public static class Client {
 
