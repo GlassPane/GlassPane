@@ -1,18 +1,11 @@
 package com.github.upcraftlp.glasspane.vanity;
 
-import com.github.upcraftlp.glasspane.vanity.CrystalBall;
 import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
@@ -31,6 +24,7 @@ public class SkinnableMapping {
         return REGISTERED_SKINS.getOrDefault(skin, 0);
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, List<String>> getValidOptions() {
         Map ret = new TreeMap();
         UUID playerID = Minecraft.getMinecraft().getSession().getProfile().getId();
