@@ -183,18 +183,13 @@ minecraft {
 
 dependencies {
 
-    deobfCompile "baubles:Baubles:${baubles_version}"
+    deobfProvided "baubles:Baubles:${baubles_version}"
 
-    compileOnly "mezz.jei:jei_${mc_version}:${jei_version}:api"
-    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}"
 
-    deobfProvided "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
-    runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
-
-    runtime "de.ellpeck.actuallyadditions:ActuallyAdditions:${mc_version}-${aa_version}"
+    deobfProvided "mcp.mobius.waila:Hwyla:${hwyla_version}"
 
     deobfProvided "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
-    //runtime "immersive-engineering:ImmersiveEngineering:${immersive_engineering_version}"
 
     compileOnly "cofh:RedstoneFlux:${rf_version}:deobf"
 
@@ -203,25 +198,18 @@ dependencies {
     deobfCompile "slimeknights.mantle:Mantle:${mantle_version}" //dependency for TConstruct
 
     deobfProvided "refinedstorage:refinedstorage:${rs_version}:api"
-    runtime "refinedstorage:refinedstorage:${rs_version}"
 
     deobfProvided "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}:api"
-    runtime "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
 
     deobfProvided "team.chisel:Chisel:MC${mc_version}-${chisel_version}:api"
-    runtime "team.chisel:Chisel:MC${mc_version}-${chisel_version}"
-    runtime "team.chisel.ctm:CTM:MC${ctm_version}"
 
     deobfCompile "MCMultiPart2:MCMultiPart:${mcmp_version}"
 
     deobfCompile "info.tehnut.harvest:Harvest:${harvest_version}"
 
     compile "codechicken:ForgeMultipart:${mc_version}-${fmp_version}:deobf"
-    runtime "codechicken:ChickenASM:1.12-${ccl_asm_version}"
 
     deobfCompile "net.darkhax.gamestages:GameStages-1.12.2:${gamestages_version}"
-    runtime "net.darkhax.bookshelf:Bookshelf-1.12.2:${bookshelf_version}"
-    runtime "net.darkhax.caliper:Caliper-1.12.2:${caliper_version}"
 
     deobfCompile("com.github.Team-Rapture:Aquatic:${aquatic_version}") {
         exclude group: "mezz.jei"
