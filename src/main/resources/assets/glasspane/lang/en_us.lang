@@ -27,3 +27,10 @@ message.glasspane.modupdate.versions=Current Version: %1$s, latest Version: %2$s
 message.glasspane.modupdate.changelog=[Changelog]
 message.glasspane.modupdate.download=[Download]
 message.glasspane.modupdate.format=%1$s\n%2$s\n%3$s
+
+#Commands
+command.glasspane.debug.usage=Use /glasspane_debug <subcommand>
+command.glasspane.debug.dump_registry.usage=Use /glasspane_debug dump_registry [Registry] to dump the specified registry, or all, if not specified.
+command.glasspane.debug.dump_registry.success=Successfully dumped registry %s
+command.glasspane.debug.dump_registry.all.success=Successfully dumped all registries.
+command.glasspane.debug.dump_registry.notfound=No such registry: %s!

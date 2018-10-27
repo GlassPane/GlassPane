@@ -3,6 +3,7 @@ package com.github.upcraftlp.glasspane;
 import com.github.upcraftlp.glasspane.api.net.NetworkHandler;
 import com.github.upcraftlp.glasspane.api.proxy.IProxy;
 import com.github.upcraftlp.glasspane.api.util.logging.PrefixMessageFactory;
+import com.github.upcraftlp.glasspane.command.CommandGPDebug;
 import com.github.upcraftlp.glasspane.config.Lens;
 import com.github.upcraftlp.glasspane.net.PacketOpenGuide;
 import com.github.upcraftlp.glasspane.net.PacketUpdateServerSkins;
@@ -111,7 +112,10 @@ public class GlassPane {
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         proxy.serverStarting(event);
-        if(isDebugMode()) debugLogger.info("Starting up the server!", new Object[0]);
+        if(isDebugMode()) {
+            event.registerServerCommand(new CommandGPDebug());
+            debugLogger.info("Starting up the server!", new Object[0]);
+        }
     }
 
     @Mod.EventHandler
