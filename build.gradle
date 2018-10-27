@@ -152,7 +152,7 @@ minecraft {
     replace "@FINGERPRINTKEY@", fingerPrintKey
     replace "@UPDATEJSON@", update_json
     replace "required-after:forge", "required-after:forge@[" + project.forge_version + ",)"
-    replaceIn "${project.reference_class}".replace(".", "/")
+    replaceIn "${project.reference_class}".replace(".", "/") + ".java"
 
     if(project.hasProperty('dev_uuid')) {
         clientRunArgs += "--uuid=${dev_uuid}"
