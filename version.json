@@ -1,10 +1,11 @@
 {
     "homepage": "https://minecraft.curseforge.com/projects/292852",
     "promos": {
-        "1.12.2-latest": "1.0.1",
+        "1.12.2-latest": "1.0.2",
         "1.12.2-recommended": "1.0.1"
     },
     "1.12": {
+        "1.0.2": "* added registry dump command\n* fix version in mod metadata",
         "1.0.1": "* added chat color code parsing",
         "1.0.0": "* first build"
     }
