@@ -34,3 +34,6 @@ command.glasspane.debug.dump_registry.usage=Use /glasspane_debug dump_registry [
 command.glasspane.debug.dump_registry.success=Successfully dumped registry %s
 command.glasspane.debug.dump_registry.all.success=Successfully dumped all registries.
 command.glasspane.debug.dump_registry.notfound=No such registry: %s!
+
+#Config
+config.glasspane.general.title=General
