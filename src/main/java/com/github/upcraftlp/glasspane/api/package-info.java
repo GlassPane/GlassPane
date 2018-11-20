@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-@API(owner = "GlassPane", provides = "GlassPane|API", apiVersion = "0.1.0")
+@API(owner = "GlassPane", provides = "GlassPane|API", apiVersion = "0.2.0")
 package com.github.upcraftlp.glasspane.api;
 
 import mcp.MethodsReturnNonnullByDefault;
