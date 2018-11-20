@@ -17,6 +17,7 @@ public class ForgeUtils {
 
     public static final ResourceLocation MISSING = new ResourceLocation("minecraft", "missingno");
     public static final File MC_DIR = ReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "minecraftDir");
+    public static final File GLASSPANE_CONFIG_DIR = new File(MC_DIR, "config/glasspanemods");
     public static final File MOD_RESOURCES = createNewDirectory(new File(MC_DIR, "glasspane"));
     private static final Map<String, Boolean> LOADED_MODS = new ConcurrentHashMap<>();
 
