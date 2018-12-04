@@ -1,15 +1,13 @@
 package com.github.upcraftlp.glasspane.api.util;
 
+import com.github.upcraftlp.glasspane.api.util.serialization.datareader.DataReader;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,11 +26,22 @@ public class ForgeUtils {
         if(!f.exists()) {
             try {
                 FileUtils.forceMkdir(f);
-            } catch(IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return f;
+    }
+
+    public static String getCurrentModID() {
+        ModContainer container = getCurrentModContainer();
+        return container != null ? container.getModId() : null;
+    }
+
+    @Nullable
+    public static ModContainer getCurrentModContainer() {
+        return Loader.instance().activeModContainer();
     }
 
     public static void setCurrentModContainer(String modid) {
@@ -40,11 +49,6 @@ public class ForgeUtils {
         if(container == null || !container.getModId().equals(modid)) {
             setCurrentModContainer(getModContainer(modid));
         }
-    }
-
-    @Nullable
-    public static ModContainer getCurrentModContainer() {
-        return Loader.instance().activeModContainer();
     }
 
     @Nullable
@@ -56,14 +60,16 @@ public class ForgeUtils {
         Loader.instance().setActiveModContainer(modContainer);
     }
 
-    public static String getCurrentModID() {
-        ModContainer container = getCurrentModContainer();
-        return container != null ? container.getModId() : null;
-    }
-
     public static boolean isModLoaded(String modid) {
         if(!LOADED_MODS.containsKey(modid)) LOADED_MODS.put(modid, Loader.isModLoaded(modid));
         return LOADED_MODS.get(modid);
     }
 
+    public static <T> T readAssetData(ResourceLocation location, DataReader<T> reader, DataReader.AssetType type) {
+        return reader.readData(getAssetInputStream(reader.getPath(location, type)));
+    }
+
+    public static InputStream getAssetInputStream(String path) {
+        return ForgeUtils.class.getResourceAsStream(path);
+    }
 }
