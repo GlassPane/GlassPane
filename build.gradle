@@ -21,8 +21,6 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.1.2'
     id 'maven-publish'
 }
-
-apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073efa7ad0353b/raw/mod_script.gradle'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
