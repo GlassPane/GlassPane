@@ -13,12 +13,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.matthewprenger:CurseGradle:1.0-SNAPSHOT'
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
 plugins {
+    id 'com.matthewprenger.cursegradle' version '1.1.2'
     id 'maven-publish'
 }
 
@@ -407,8 +407,8 @@ publishing {
 }
 
 def curseRelations = {
-    //optionalLibrary 'jei'
-    //optionalLibrary '' //add curseforge-slug here
+    //optionalDependency 'jei'
+    //requiredDependency '' //add curseforge-slug here
 }
 
 processResources
