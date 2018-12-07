@@ -396,6 +396,17 @@ publishing {
             artifact javadocJar
             artifact sourceJar
             if(project.hasProperty('core_package')) artifact coreJar
+
+            //fix for Gradle 4.8+ messing with deobf dependencies
+            if(VersionNumber.parse(gradle.gradleVersion) > VersionNumber.parse("4.7")) {
+                println(String.format("Gradle version > 4.7 detected (your version is %s), applying deobf dependency fix", gradle.gradleVersion))
+                pom.withXml(new Action<XmlProvider>() {
+                    @Override
+                    void execute(XmlProvider xmlProvider) {
+                        xmlProvider.asNode().remove(xmlProvider.asNode().get("dependencies"))
+                    }
+                })
+            }
         }
     }
 
