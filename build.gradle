@@ -28,8 +28,7 @@ apply from: 'https://gist.githubusercontent.com/UpcraftLP/0a98a7dfe913bd3e99073e
 def username = project.mod_id
 if (project.hasProperty('dev_mail')) {
     username = findProperty('dev_mail')
-}
-else if (project.hasProperty('dev_username')) {
+} else if (project.hasProperty('dev_username')) {
     username = findProperty('dev_username')
 }
 
@@ -130,17 +129,15 @@ minecraft {
     version = "${project.mc_version}-${project.forge_version}"
     if (project.hasProperty('runDir')) {
         runDir = findProperty('runDir')
-    }
-    else if (file('../run').exists()) {
+    } else if (file('../run').exists()) {
         runDir = "../run"
-    }
-    else {
+    } else {
         runDir = "run"
     }
     println('run directory: ' + runDir.toString())
 
     mappings = project.forge_mappings
-    if("${mappings}" != "${project.ext.mappings}" && "${mappings}".startsWith("snapshot_")) {
+    if ("${mappings}" != "${project.ext.mappings}" && "${mappings}".startsWith("snapshot_")) {
         println(String.format("You are on old mappings, latest mappings are %s (you are on %s)", project.ext.mappings, mappings))
     }
     makeObfSourceJar = true
@@ -152,18 +149,17 @@ minecraft {
     replace "required-after:forge", "required-after:forge@[" + project.forge_version + ",)"
     replaceIn "${project.reference_class}".replace(".", "/") + ".java"
 
-    if(project.hasProperty('dev_uuid')) {
+    if (project.hasProperty('dev_uuid')) {
         clientRunArgs += "--uuid=${dev_uuid}"
-    }
-    else {
+    } else {
         clientRunArgs += "--username=${username}"
-        if(project.hasProperty('dev_password')) clientRunArgs += "--password=${dev_password}"
+        if (project.hasProperty('dev_password')) clientRunArgs += "--password=${dev_password}"
     }
 
     //coremod
-    if(project.hasProperty('loading_plugin_client')) clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
-    if(project.hasProperty('loading_plugin_server')) serverJvmArgs += "-Dfml.coreMods.load=${loading_plugin_server}"
-    
+    if (project.hasProperty('loading_plugin_client')) clientJvmArgs += "-Dfml.coreMods.load=${loading_plugin_client}"
+    if (project.hasProperty('loading_plugin_server')) serverJvmArgs += "-Dfml.coreMods.load=${loading_plugin_server}"
+
     //skip the screen to confirm that you want to load a world with missing registry entries
     serverJvmArgs += "-Dfml.doNotBackup=true"
     clientJvmArgs += "-Dfml.doNotBackup=true"
@@ -228,14 +224,13 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
-}
-else {
+} else {
     throw new IllegalArgumentException("wrong java version")
 }
 
 // API jar
 task apiJar(type: Jar) {
-    onlyIf{
+    onlyIf {
         project.hasProperty("api_package")
     }
     from sourceSets.main.allJava
@@ -245,7 +240,7 @@ task apiJar(type: Jar) {
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
             "Implementation-Title": project.name + '-api',
             "Implementation-Version": project.version,
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:api",
+            "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:api",
             "Built-On": "${mc_version}-${forge_version}"
     )
     classifier = 'api'
@@ -259,7 +254,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
             "Built-On-Java": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
             "Implementation-Title": project.name + '-javadoc',
             "Implementation-Version": project.version,
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
+            "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
             "Built-On": "${mc_version}-${forge_version}"
     )
     classifier = 'javadoc'
@@ -320,7 +315,7 @@ task signCoreJar(type: SignJar) {
     outputFile = coreJar.archivePath
 }
 
-if(project.hasProperty('core_package')) {
+if (project.hasProperty('core_package')) {
     reobf {
         coreJar {
             mappingType = 'SEARGE'
@@ -334,12 +329,12 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${project.mod_version}",
             "Built-On": "${project.mc_version}-${project.forge_version}",
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
+            "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}",
             //"FMLAT": "${project.mod_id}_at.cfg",
 
             //"Main-Class": project.installer_main_class
     )
-    if(project.hasProperty('core_package')) {
+    if (project.hasProperty('core_package')) {
         exclude String.valueOf(findProperty('core_package')).replace(".", "/") + "/**"
         from(coreJar.archivePath.absolutePath) {
             include '*'
@@ -355,7 +350,7 @@ sourceJar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${project.mod_version}",
             "Built-On": "${project.mc_version}-${project.forge_version}",
-            "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}:sources"
+            "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}:sources"
     )
 }
 
@@ -374,7 +369,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     outputFile = jar.archivePath
 }
 
-if(project.hasProperty('core_package')) {
+if (project.hasProperty('core_package')) {
     tasks.jar.dependsOn signCoreJar
     tasks.signCoreJar.dependsOn reobfCoreJar
 }
@@ -385,7 +380,7 @@ artifacts {
     archives apiJar
     archives javadocJar
     archives sourceJar
-    if(project.hasProperty('core_package')) archives coreJar
+    if (project.hasProperty('core_package')) archives coreJar
 }
 
 publishing {
@@ -395,17 +390,16 @@ publishing {
             artifact apiJar
             artifact javadocJar
             artifact sourceJar
-            if(project.hasProperty('core_package')) artifact coreJar
+            if (project.hasProperty('core_package')) artifact coreJar
 
             //fix for Gradle 4.8+ messing with deobf dependencies
-            if(VersionNumber.parse(gradle.gradleVersion) > VersionNumber.parse("4.7")) {
-                println(String.format("Gradle version > 4.7 detected (your version is %s), applying deobf dependency fix", gradle.gradleVersion))
-                pom.withXml(new Action<XmlProvider>() {
-                    @Override
-                    void execute(XmlProvider xmlProvider) {
-                        xmlProvider.asNode().remove(xmlProvider.asNode().get("dependencies"))
+            if (VersionNumber.parse(gradle.gradleVersion) > VersionNumber.parse("4.7")) {
+                pom.withXml {
+                    if (asNode().get("dependencies").size() > 0) {
+                        println(String.format("Gradle version > 4.7 detected (your version is %s), applying deobf dependency fix", gradle.gradleVersion))
+                        asNode().remove(asNode().get("dependencies"))
                     }
-                })
+                }
             }
         }
     }
@@ -421,36 +415,36 @@ def curseRelations = {
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // add mod metadata to in mcmod.info
-        expand 'version':project.mod_version, 'mcversion':project.minecraft.version,
-                'mod_name':project.mod_name, 'mod_description':project.mod_description,
-                'url':project.url, 'update_url':project.update_json, 'year': Year.now().getValue()
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-    //ATs
-    rename '(.+_at.cfg)', 'META-INF/$1'
-}
+                // add mod metadata to in mcmod.info
+                expand 'version': project.mod_version, 'mcversion': project.minecraft.version,
+                        'mod_name': project.mod_name, 'mod_description': project.mod_description,
+                        'url': project.url, 'update_url': project.update_json, 'year': Year.now().getValue()
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+
+            //ATs
+            rename '(.+_at.cfg)', 'META-INF/$1'
+        }
 
 curseforge {
     if (project.hasProperty('curse_key'))
         apiKey = project.curse_key
 
 
-    if(project.hasProperty('curse_id')) {
+    if (project.hasProperty('curse_id')) {
         project {
             id = project.curse_id
             changelogType = 'markdown'
@@ -462,7 +456,7 @@ curseforge {
             addArtifact javadocJar
             addArtifact sourceJar
             addArtifact apiJar
-            if(project.hasProperty('core_package')) addArtifact coreJar
+            if (project.hasProperty('core_package')) addArtifact coreJar
 
             //addGameVersion '1.12.2' //automatically determined by the CurseGradle plugin
 
