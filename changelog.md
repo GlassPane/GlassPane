@@ -2,6 +2,8 @@
 Version 1.0.2
 ------------------------------------------------------
 - added registry dump command
+- added data readers
+- added collection utils
 - fix version in mod metadata
 
 ------------------------------------------------------
