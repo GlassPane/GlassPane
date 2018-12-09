@@ -15,16 +15,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("unused")
 @SideOnly(Side.CLIENT)
@@ -70,5 +65,10 @@ public class ClientProxy implements IProxy {
     @Override
     public EntityPlayer getClientPlayer() {
         return Minecraft.getMinecraft().player;
+    }
+
+    @Override
+    public String getCurrentLanguageCode() {
+        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().toLowerCase(Locale.ROOT);
     }
 }

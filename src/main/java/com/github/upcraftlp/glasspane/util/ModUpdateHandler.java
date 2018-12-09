@@ -36,6 +36,7 @@ public class ModUpdateHandler {
 
     private static final Set<String> MODS_TO_CHECK = new HashSet<>();
 
+    //TODO add overload with custom version comparator -> custom sorting for BETA_OUTDATED/OUTDATED
     public static void registerMod(String modid) {
         if(ForgeUtils.isModLoaded(modid)) MODS_TO_CHECK.add(modid);
         else GlassPane.getLogger().warn("Tried to register unloaded mod {} for glasspane update notifications!", modid);

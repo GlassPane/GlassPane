@@ -8,7 +8,7 @@ import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ForgeUtils {
@@ -66,7 +66,7 @@ public class ForgeUtils {
     }
 
     public static <T> T readAssetData(ResourceLocation location, DataReader<T> reader, DataReader.AssetType type) {
-        return reader.readData(getAssetInputStream(reader.getPath(location, type)));
+        return reader.readData(getAssetInputStream(reader.getPath(location, type).toLowerCase(Locale.ROOT)));
     }
 
     public static InputStream getAssetInputStream(String path) {

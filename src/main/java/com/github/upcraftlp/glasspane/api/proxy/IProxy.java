@@ -66,4 +66,8 @@ public interface IProxy {
     default EntityPlayer getClientPlayer() {
         return null;
     }
+
+    default String getCurrentLanguageCode() {
+        return "en_us";
+    }
 }
