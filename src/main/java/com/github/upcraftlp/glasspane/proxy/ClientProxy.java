@@ -42,7 +42,7 @@ public class ClientProxy implements IProxy {
         Minecraft.getMinecraft().getRenderManager().getSkinMap().values().forEach(GlassPaneClientEventFactory::onRegisterLayers);
 
         //other living entities
-        Minecraft.getMinecraft().getRenderManager().entityRenderMap.entrySet().stream().map(Map.Entry::getValue).forEach(GlassPaneClientEventFactory::onRegisterLayers);
+        Minecraft.getMinecraft().getRenderManager().entityRenderMap.values().forEach(GlassPaneClientEventFactory::onRegisterLayers);
     }
 
     @Nullable
