@@ -3,7 +3,7 @@ package com.github.upcraftlp.glasspane.api.util.serialization.datareader;
 import com.github.upcraftlp.glasspane.GlassPane;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * used to read data from mod resources, in compliance with MC1.13's /data/ structure separated from assets
@@ -23,7 +23,7 @@ public interface DataReader<T> {
         return path;
     }
 
-    T readData(InputStream in);
+    T readData(InputStream in) throws IOException;
 
     enum AssetType {
         ASSETS("assets", true),

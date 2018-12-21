@@ -1,5 +1,6 @@
 package com.github.upcraftlp.glasspane.api.util;
 
+import com.github.upcraftlp.glasspane.GlassPane;
 import com.github.upcraftlp.glasspane.api.util.serialization.datareader.DataReader;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.*;
@@ -66,7 +67,15 @@ public class ForgeUtils {
     }
 
     public static <T> T readAssetData(ResourceLocation location, DataReader<T> reader, DataReader.AssetType type) {
-        return reader.readData(getAssetInputStream(reader.getPath(location, type).toLowerCase(Locale.ROOT)));
+        T ret;
+        try {
+            ret = reader.readData(getAssetInputStream(reader.getPath(location, type).toLowerCase(Locale.ROOT)));
+        }
+        catch (IOException e) {
+            GlassPane.getDebugLogger().error("Exception reading data", e);
+            ret = null;
+        }
+        return ret;
     }
 
     public static InputStream getAssetInputStream(String path) {

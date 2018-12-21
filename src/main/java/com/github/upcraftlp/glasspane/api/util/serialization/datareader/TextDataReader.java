@@ -3,7 +3,7 @@ package com.github.upcraftlp.glasspane.api.util.serialization.datareader;
 import java.io.*;
 import java.util.Scanner;
 
-public class StringDataReader implements DataReader<String> {
+public class TextDataReader implements DataReader<String> {
 
     @Override
     public String readData(InputStream in) {
