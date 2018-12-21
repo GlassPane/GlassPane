@@ -1,8 +1,7 @@
 package com.github.upcraftlp.glasspane.api.event.factory;
 
 import com.github.upcraftlp.glasspane.api.event.ModOutdatedEvent;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.*;
 import net.minecraftforge.fml.common.ModContainer;
 
 public class GlassPaneEventFactory {
