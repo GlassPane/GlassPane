@@ -35,5 +35,7 @@ command.glasspane.debug.dump_registry.success=Successfully dumped registry %s
 command.glasspane.debug.dump_registry.all.success=Successfully dumped all registries.
 command.glasspane.debug.dump_registry.notfound=No such registry: %s!
 
+command.glasspane.debug.load_structure.usage=Use /glasspane_debug load_structure <structure> [<x> <y> <z>] [centered (true|false)] [rotation (int)] [mirror (int)] [integrity (0.0 - 1.0)] [ignore entities (true|false)] to load a structure
+
 #Config
 config.glasspane.general.title=General

@@ -1,6 +1,6 @@
 package com.github.upcraftlp.glasspane.command;
 
-import com.github.upcraftlp.glasspane.command.subcommand.CommandDumpRegistries;
+import com.github.upcraftlp.glasspane.command.subcommand.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.server.command.*;
 
@@ -10,7 +10,8 @@ public class CommandGPDebug extends CommandTreeBase {
 
     public CommandGPDebug() {
         this.addSubcommand(new CommandDumpRegistries());
-        this.addSubcommand(new CommandTreeHelp(this));
+        this.addSubcommand(new CommandLoadStructure());
+        this.addSubcommand(new CommandTreeHelp(this)); //needs to be last!
     }
 
     @Override
