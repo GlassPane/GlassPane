@@ -11,10 +11,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.*;
 import net.minecraftforge.common.MinecraftForge;
 
+import javax.annotation.Nullable;
+
 public class StructureLoaderNBT implements StructureLoader {
 
+    @Nullable
     @Override
-    public void placeInWorld(ResourceLocation structureIdentifier, World world, BlockPos pos, PlacementSettings settings, boolean centered, int flags) {
+    public Template placeInWorld(ResourceLocation structureIdentifier, World world, BlockPos pos, PlacementSettings settings, boolean centered, int flags) {
         settings.setSeed(world.getSeed());
         settings.setIntegrity(MathHelper.clamp(settings.getIntegrity(), 0.0F, 1.0F));
         Template template = new Template();
@@ -24,6 +27,10 @@ public class StructureLoaderNBT implements StructureLoader {
             pos = pos.subtract(Template.transformedBlockPos(settings, new BlockPos(template.transformedSize(settings.getRotation()).getX() / 2, template.transformedSize(settings.getRotation()).getY(), template.transformedSize(settings.getRotation()).getZ() / 2)));
         }
         StructurePlaceEvent event = new StructurePlaceEvent(world, pos, centered, structureIdentifier, flags, settings, template);
-        if(!MinecraftForge.EVENT_BUS.post(event)) event.getStructureTemplate().addBlocksToWorld(event.getWorld(), event.getPosition(), event.getPlacementSettings(), event.getBlockPlacementFlags());
+        if(!MinecraftForge.EVENT_BUS.post(event)) {
+            event.getStructureTemplate().addBlocksToWorld(event.getWorld(), event.getPosition(), event.getPlacementSettings(), event.getBlockPlacementFlags());
+            return event.getStructureTemplate();
+        }
+        else return null;
     }
 }
