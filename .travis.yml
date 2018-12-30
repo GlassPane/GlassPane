@@ -1,12 +1,19 @@
 language: java
+
+## always install latest oracle java8 jdk:
+#addons:
+#    apt:
+#        packages:
+#            - oracle-java8-installer
+jdk:
+    - oraclejdk8
 before_install:
     - chmod +x gradlew
 install:
-    - "./gradlew setupCIWorkspace"
+    - "./gradlew setupDevWorkspace" #bug with ForgeGradle: does not compile some generics otherwise
+#    - "./gradlew setupCIWorkspace"
 script:
     - "./gradlew clean build"
-jdk:
-    - oraclejdk8
 before_cache:
     - find $HOME/.gradle/ -name '*.lock' -print -exec rm -f {} \;
 cache:
