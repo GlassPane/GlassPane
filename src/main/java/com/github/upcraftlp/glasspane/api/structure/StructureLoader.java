@@ -18,7 +18,7 @@ public interface StructureLoader {
      * @param world               the world to load the structure in
      * @param pos                 the position to load the structure at
      * @param settings            the placement settings
-     * @param centered            if true, the {@param pos} is considered the center position, rather than a corner. <b>(X/Z) ONLY</b>
+     * @param centered            if true, the {@code pos} is considered the center position, rather than a corner. <b>(X/Z) ONLY</b>
      */
     @Nullable
     default Template placeInWorld(ResourceLocation structureIdentifier, World world, BlockPos pos, PlacementSettings settings, boolean centered) {
@@ -30,7 +30,7 @@ public interface StructureLoader {
      * @param world               the world to load the structure in
      * @param pos                 the position to load the structure at
      * @param settings            the placement settings
-     * @param centered            if true, the {@param pos} is considered the center position, rather than a corner. <b>(X/Z) ONLY</b>
+     * @param centered            if true, the {@code pos} is considered the center position, rather than a corner. <b>(X/Z) ONLY</b>
      * @param flags               flags to pass to {@link World#setBlockState(BlockPos, IBlockState, int)}
      */
     @Nullable
